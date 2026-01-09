@@ -18,14 +18,13 @@ const serif = Playfair_Display({
 export const metadata: Metadata = {
   title: "Anita Pilates | Instructora de Pilates en Barcelona",
   description: "Pilates Mat y Pilates Reformer en Barcelona",
- 
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
- react.ReactNode;
-}>) {
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="es">
       <body className={`${sans.variable} ${serif.variable} antialiased`}>
