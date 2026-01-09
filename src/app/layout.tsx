@@ -16,9 +16,9 @@ const serif = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Anita Pilates | Movimiento consciente en Barcelona",
+  title: "Anita Pilates | Instructora de Pilates en Barcelona",
   description:
-    "Web personal de Anita, instructora de pilates en Barcelona. Clases online, series grupales bimensuales y bienestar consciente.",
+    "Web personal de Anita, instructora de pilates en Barcelona. Clases online, eventos grupales cada dos meses y bienestar consciente.",
 };
 
 export default function RootLayout({
