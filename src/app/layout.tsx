@@ -17,14 +17,19 @@ const serif = Playfair_Display({
 
 export const metadata: Metadata = {
   title: "Anita Pilates | Instructora de Pilates en Barcelona",
-  description:
-    "Web personal de Anita, instructora de pilates en Barcelona. Clases online, eventos grupales cada dos meses y bienestar consciente.",
+  description: "Pilates Mat y Pilates Reformer en Barcelona",
+  icons: {
+    icon: "/favicon-32x32.png",
+    shortcut: "/favicon-16x16.png",
+    apple: "/favicon-16x16.png",
+  },
+  manifest: "/site.webmanifest",
 };
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+ react.ReactNode;
 }>) {
   return (
     <html lang="es">
