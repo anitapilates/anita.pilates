@@ -31,12 +31,14 @@ export const revalidate = 1800; // 30 min
 export async function GET() {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 8000);
+
   try {
     const res = await fetch(CSV_URL, {
       signal: controller.signal,
       cache: "no-store",
     });
     if (!res.ok) throw new Error("Fetch failed");
+
     const csv = await res.text();
     const lines = csv
       .split("\n")
@@ -76,11 +78,19 @@ export async function GET() {
       grouped[entry.DIA].push(entry);
     }
 
+    // 🔹 ÚNICO CAMBIO: ordenar por hora real (minutos)
+    const toMinutes = (t: string) => {
+      const [hRaw, mRaw] = t.trim().split(":");
+      const h = Number(hRaw ?? 0);
+      const m = Number(mRaw ?? 0);
+      return h * 60 + m;
+    };
+
     const days: DaySchedule[] = Object.entries(grouped)
       .map(([day, classes]) => ({
         day,
-        classes: classes.sort((a, b) =>
-          a.INICIO.localeCompare(b.INICIO, "es")
+        classes: classes.sort(
+          (a, b) => toMinutes(a.INICIO) - toMinutes(b.INICIO)
         ),
       }))
       .filter((d) => d.classes.length > 0)
