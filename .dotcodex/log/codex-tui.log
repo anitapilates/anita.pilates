@@ -3436,3 +3436,2089 @@
 2026-01-09T08:29:13.721405Z  INFO Resuming rollout from "/home/vibecode/.codex/sessions/2026/01/08/rollout-2026-01-08T12-24-50-019b9d91-195b-7c01-bd7e-5d7623e2c143.jsonl"
 2026-01-09T08:29:13.736553Z  INFO Resumed rollout with 1111 items, conversation ID: Some(ConversationId { uuid: 019b9d91-195b-7c01-bd7e-5d7623e2c143 })
 2026-01-09T08:29:13.736565Z  INFO Resumed rollout successfully from "/home/vibecode/.codex/sessions/2026/01/08/rollout-2026-01-08T12-24-50-019b9d91-195b-7c01-bd7e-5d7623e2c143.jsonl"
+2026-01-10T11:18:45.698690Z  INFO Resuming rollout from "/home/vibecode/.codex/sessions/2026/01/08/rollout-2026-01-08T12-24-50-019b9d91-195b-7c01-bd7e-5d7623e2c143.jsonl"
+2026-01-10T11:18:45.712568Z  INFO Resumed rollout with 1111 items, conversation ID: Some(ConversationId { uuid: 019b9d91-195b-7c01-bd7e-5d7623e2c143 })
+2026-01-10T11:18:45.712580Z  INFO Resumed rollout successfully from "/home/vibecode/.codex/sessions/2026/01/08/rollout-2026-01-08T12-24-50-019b9d91-195b-7c01-bd7e-5d7623e2c143.jsonl"
+2026-01-10T11:32:10.973408Z  INFO spawning ghost snapshot task
+2026-01-10T11:32:11.072722Z  INFO ghost snapshot blocking task finished
+2026-01-10T11:32:11.072755Z  INFO ghost commit captured: b392907f7e1ba867b33112f1ad2fce04853acf7c
+2026-01-10T11:32:11.072761Z  INFO ghost snapshot gate marked ready
+2026-01-10T11:32:32.194560Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Update File: src/app/page.tsx
+@@
+ const youtubeVideo = {
+   id: "XD40KDc1Id0",
+   title: "Reto 21 días · Sesión completa",
+   url: "https://www.youtube.com/watch?v=XD40KDc1Id0",
+ };
++
++type ClassEntry = {
++  DIA: string;
++  INICIO: string;
++  FIN: string;
++  CENTRO: string;
++  TIPO: string;
++};
++
++type DaySchedule = {
++  day: string;
++  classes: ClassEntry[];
++};
++
++const DAYS_ORDER = [
++  "Lunes",
++  "Martes",
++  "Miércoles",
++  "Jueves",
++  "Viernes",
++  "Sábado",
++  "Domingo",
++];
++
++async function fetchSchedule(): Promise<DaySchedule[]> {
++  const url =
++    "https://docs.google.com/spreadsheets/d/e/2PACX-1vSBNdcHyMCQkqGw3YOw2VTcUaszt617jiyvi_IhAoEiz97-Kw-MAvA6pi2P5V315adp8OOQ7vkv2wav/pub?gid=0&single=true&output=csv";
++  try {
++    const res = await fetch(url, { next: { revalidate: 1800 } });
++    if (!res.ok) throw new Error("bad status");
++    const csv = await res.text();
++    const rows = csv
++      .split("\n")
++      .map((r) => r.trim())
++      .filter(Boolean);
++    const headers = rows.shift()?.split(",").map((h) => h.trim().toUpperCase());
++    if (!headers || headers.length < 5) throw new Error("bad headers");
++    const entries: ClassEntry[] = rows
++      .map((row) => {
++        const cols = row.split(",").map((c) => c.trim());
++        const obj: Record<string, string> = {};
++        headers.forEach((h, i) => {
++          obj[h] = cols[i] ?? "";
++        });
++        return {
++          DIA: obj["DIA"] || "",
++          INICIO: obj["INICIO"] || "",
++          FIN: obj["FIN"] || "",
++          CENTRO: obj["CENTRO"] || "",
++          TIPO: obj["TIPO"] || "",
++        };
++      })
++      .filter((e) => e.DIA && e.INICIO && e.FIN);
++
++    const grouped: Record<string, ClassEntry[]> = {};
++    for (const entry of entries) {
++      const day = entry.DIA;
++      if (!grouped[day]) grouped[day] = [];
++      grouped[day].push(entry);
++    }
++
++    const days: DaySchedule[] = Object.entries(grouped)
++      .map(([day, classes]) => ({
++        day,
++        classes: classes.sort((a, b) =>
++          a.INICIO.localeCompare(b.INICIO, "es")
++        ),
++      }))
++      .filter((d) => d.classes.length > 0)
++      .sort(
++        (a, b) =>
++          DAYS_ORDER.indexOf(a.day) - DAYS_ORDER.indexOf(b.day)
++      );
++
++    return days;
++  } catch {
++    return [];
++  }
++}
+*** End Patch
+2026-01-10T11:32:36.457592Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Update File: src/app/page.tsx
+@@
+-export default function Home() {
++export default async function Home() {
++  const schedule = await fetchSchedule();
+   return (
+     <div className="min-h-screen text-[#1f1b18]">
+*** End Patch
+2026-01-10T11:32:52.764729Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Update File: src/app/page.tsx
+@@
+         <section className="space-y-4 rounded-3xl border border-[#e2d8cb] bg-white/70 p-8 shadow-[0_12px_36px_rgba(0,0,0,0.05)]">
+           <p className="text-xs uppercase tracking-[0.3em] text-neutral-600">
+             Sobre mí
+           </p>
+           <h2 className="text-3xl font-serif tracking-tight text-[#1f1b18]">
+@@
+             </a>
+           </div>
+         </section>
+ 
++        <section className="space-y-4 rounded-3xl border border-[#e2d8cb] bg-white/70 p-8 shadow-[0_12px_36px_rgba(0,0,0,0.05)]">
++          <p className="text-xs uppercase tracking-[0.3em] text-neutral-600">
++            Mi horario semanal
++          </p>
++          <h2 className="text-3xl font-serif tracking-tight text-[#1f1b18]">
++            Agenda viva de esta semana
++          </h2>
++          <p className="text-neutral-700">
++            Aquí tienes dónde doy clases esta semana en Barcelona.
++          </p>
++          <p className="text-neutral-600 text-sm">
++            Horarios orientativos: escríbeme y te confirmo plaza y estudio.
++          </p>
++
++          {schedule.length === 0 ? (
++            <div className="rounded-2xl border border-[#e2d8cb] bg-white/70 px-4 py-5 text-sm text-neutral-700">
++              Horario no disponible ahora, escríbeme por WhatsApp.
++            </div>
++          ) : (
++            <div className="grid gap-4 sm:grid-cols-2">
++              {schedule.map((day) => (
++                <div
++                  key={day.day}
++                  className="rounded-2xl border border-[#e2d8cb] bg-white/80 p-4 shadow-[0_8px_24px_rgba(0,0,0,0.04)] flex flex-col gap-3"
++                >
++                  <div className="flex items-center justify-between">
++                    <p className="text-sm uppercase tracking-[0.22em] text-neutral-600">
++                      {day.day}
++                    </p>
++                    <span className="h-px flex-1 mx-3 bg-[#e2d8cb]" />
++                    <span className="text-xs text-neutral-500">
++                      {day.classes.length} clase{day.classes.length > 1 ? "s" : ""}
++                    </span>
++                  </div>
++                  <div className="space-y-3">
++                    {day.classes.map((clase, idx) => (
++                      <div
++                        key={`${clase.DIA}-${clase.INICIO}-${idx}`}
++                        className="rounded-xl border border-[#e9dfd2] bg-white px-3 py-3"
++                      >
++                        <p className="text-sm font-semibold text-[#1f1b18]">
++                          {clase.INICIO} – {clase.FIN}
++                        </p>
++                        <p className="text-sm text-neutral-700">{clase.CENTRO}</p>
++                        <p className="text-xs uppercase tracking-[0.18em] text-neutral-600">
++                          {clase.TIPO}
++                        </p>
++                      </div>
++                    ))}
++                  </div>
++                </div>
++              ))}
++            </div>
++          )}
++        </section>
++
+         <section id="clases" className="space-y-10">
+*** End Patch
+2026-01-10T11:42:36.867927Z  INFO spawning ghost snapshot task
+2026-01-10T11:42:36.967104Z  INFO ghost snapshot blocking task finished
+2026-01-10T11:42:36.967138Z  INFO ghost commit captured: a54feaff55e382460ffe1f98ddd0d78851d01c8e
+2026-01-10T11:42:36.967144Z  INFO ghost snapshot gate marked ready
+2026-01-10T11:42:54.530332Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Add File: src/app/api/horario/route.ts
++import { NextResponse } from "next/server";
++
++const CSV_URL =
++  "https://docs.google.com/spreadsheets/d/e/2PACX-1vSBNdcHyMCQkqGw3YOw2VTcUaszt617jiyvi_IhAoEiz97-Kw-MAvA6pi2P5V315adp8OOQ7vkv2wav/pub?gid=0&single=true&output=csv";
++
++type ClassEntry = {
++  DIA: string;
++  INICIO: string;
++  FIN: string;
++  CENTRO: string;
++  TIPO: string;
++};
++
++type DaySchedule = {
++  day: string;
++  classes: ClassEntry[];
++};
++
++const DAYS_ORDER = [
++  "Lunes",
++  "Martes",
++  "Miércoles",
++  "Jueves",
++  "Viernes",
++  "Sábado",
++  "Domingo",
++];
++
++export const revalidate = 1800; // 30 min
++
++export async function GET() {
++  const controller = new AbortController();
++  const timeout = setTimeout(() => controller.abort(), 8000);
++  try {
++    const res = await fetch(CSV_URL, {
++      signal: controller.signal,
++      cache: "no-store",
++    });
++    if (!res.ok) throw new Error("Fetch failed");
++    const csv = await res.text();
++    const rows = csv
++      .split("\n")
++      .map((r) => r.trim())
++      .filter(Boolean);
++    const headers = rows.shift()?.split(",").map((h) => h.trim().toUpperCase());
++    if (!headers || headers.length < 5) throw new Error("Bad headers");
++
++    const entries: ClassEntry[] = rows
++      .map((row) => {
++        const cols = row.split(",").map((c) => c.trim());
++        const obj: Record<string, string> = {};
++        headers.forEach((h, i) => {
++          obj[h] = cols[i] ?? "";
++        });
++        return {
++          DIA: obj["DIA"] || "",
++          INICIO: obj["INICIO"] || "",
++          FIN: obj["FIN"] || "",
++          CENTRO: obj["CENTRO"] || "",
++          TIPO: obj["TIPO"] || "",
++        };
++      })
++      .filter((e) => e.DIA && e.INICIO && e.FIN && e.CENTRO && e.TIPO);
++
++    const grouped: Record<string, ClassEntry[]> = {};
++    for (const entry of entries) {
++      if (!grouped[entry.DIA]) grouped[entry.DIA] = [];
++      grouped[entry.DIA].push(entry);
++    }
++
++    const days: DaySchedule[] = Object.entries(grouped)
++      .map(([day, classes]) => ({
++        day,
++        classes: classes.sort((a, b) =>
++          a.INICIO.localeCompare(b.INICIO, "es")
++        ),
++      }))
++      .filter((d) => d.classes.length > 0)
++      .sort(
++        (a, b) =>
++          DAYS_ORDER.indexOf(a.day) - DAYS_ORDER.indexOf(b.day)
++      );
++
++    return NextResponse.json({ days });
++  } catch {
++    return NextResponse.json({ days: [] }, { status: 200 });
++  } finally {
++    clearTimeout(timeout);
++  }
++}
+*** End Patch
+2026-01-10T11:43:10.865764Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Update File: src/app/page.tsx
+@@
+-type ClassEntry = {
+-  DIA: string;
+-  INICIO: string;
+-  FIN: string;
+-  CENTRO: string;
+-  TIPO: string;
+-};
+-
+-type DaySchedule = {
+-  day: string;
+-  classes: ClassEntry[];
+-};
+-
+-const DAYS_ORDER = [
+-  "Lunes",
+-  "Martes",
+-  "Miércoles",
+-  "Jueves",
+-  "Viernes",
+-  "Sábado",
+-  "Domingo",
+-];
+-
+-async function fetchSchedule(): Promise<DaySchedule[]> {
+-  const url =
+-    "https://docs.google.com/spreadsheets/d/e/2PACX-1vSBNdcHyMCQkqGw3YOw2VTcUaszt617jiyvi_IhAoEiz97-Kw-MAvA6pi2P5V315adp8OOQ7vkv2wav/pub?gid=0&single=true&output=csv";
+-  try {
+-    const res = await fetch(url, { next: { revalidate: 1800 } });
+-    if (!res.ok) throw new Error("bad status");
+-    const csv = await res.text();
+-    const rows = csv
+-      .split("\n")
+-      .map((r) => r.trim())
+-      .filter(Boolean);
+-    const headers = rows.shift()?.split(",").map((h) => h.trim().toUpperCase());
+-    if (!headers || headers.length < 5) throw new Error("bad headers");
+-    const entries: ClassEntry[] = rows
+-      .map((row) => {
+-        const cols = row.split(",").map((c) => c.trim());
+-        const obj: Record<string, string> = {};
+-        headers.forEach((h, i) => {
+-          obj[h] = cols[i] ?? "";
+-        });
+-        return {
+-          DIA: obj["DIA"] || "",
+-          INICIO: obj["INICIO"] || "",
+-          FIN: obj["FIN"] || "",
+-          CENTRO: obj["CENTRO"] || "",
+-          TIPO: obj["TIPO"] || "",
+-        };
+-      })
+-      .filter((e) => e.DIA && e.INICIO && e.FIN);
+-
+-    const grouped: Record<string, ClassEntry[]> = {};
+-    for (const entry of entries) {
+-      const day = entry.DIA;
+-      if (!grouped[day]) grouped[day] = [];
+-      grouped[day].push(entry);
+-    }
+-
+-    const days: DaySchedule[] = Object.entries(grouped)
+-      .map(([day, classes]) => ({
+-        day,
+-        classes: classes.sort((a, b) =>
+-          a.INICIO.localeCompare(b.INICIO, "es")
+-        ),
+-      }))
+-      .filter((d) => d.classes.length > 0)
+-      .sort(
+-        (a, b) =>
+-          DAYS_ORDER.indexOf(a.day) - DAYS_ORDER.indexOf(b.day)
+-      );
+-
+-    return days;
+-  } catch {
+-    return [];
+-  }
+-}
++type ClassEntry = {
++  DIA: string;
++  INICIO: string;
++  FIN: string;
++  CENTRO: string;
++  TIPO: string;
++};
++
++type DaySchedule = {
++  day: string;
++  classes: ClassEntry[];
++};
++
++async function fetchSchedule(): Promise<DaySchedule[]> {
++  try {
++    const res = await fetch(`${process.env.NEXT_PUBLIC_VERCEL_URL ? "https://" + process.env.NEXT_PUBLIC_VERCEL_URL : ""}/api/horario`, {
++      cache: "no-store",
++    });
++    if (!res.ok) throw new Error("bad status");
++    const data = await res.json();
++    return (data.days as DaySchedule[]) || [];
++  } catch {
++    try {
++      const res = await fetch("http://localhost:3000/api/horario", {
++        cache: "no-store",
++      });
++      if (!res.ok) throw new Error("fallback bad status");
++      const data = await res.json();
++      return (data.days as DaySchedule[]) || [];
++    } catch {
++      return [];
++    }
++  }
++}
+*** End Patch
+2026-01-10T11:43:20.570570Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Update File: src/app/page.tsx
+@@
+-        <section className="space-y-4 rounded-3xl border border-[#e2d8cb] bg-white/70 p-8 shadow-[0_12px_36px_rgba(0,0,0,0.05)]">
++        <section className="space-y-4 rounded-3xl border border-[#e2d8cb] bg-white/70 p-8 shadow-[0_12px_36px_rgba(0,0,0,0.05)]">
+           <p className="text-xs uppercase tracking-[0.3em] text-neutral-600">
+             Mi horario semanal
+           </p>
+-          <h2 className="text-3xl font-serif tracking-tight text-[#1f1b18]">
+-            Agenda viva de esta semana
+-          </h2>
+-          <p className="text-neutral-700">
+-            Aquí tienes dónde doy clases esta semana en Barcelona.
+-          </p>
+-          <p className="text-neutral-600 text-sm">
+-            Horarios orientativos: escríbeme y te confirmo plaza y estudio.
+-          </p>
++          <h2 className="text-3xl font-serif tracking-tight text-[#1f1b18]">
++            Mi horario de esta semana
++          </h2>
++          <p className="text-neutral-700">
++            Aquí tienes dónde doy clases esta semana en Barcelona.
++          </p>
+ 
+           {schedule.length === 0 ? (
+             <div className="rounded-2xl border border-[#e2d8cb] bg-white/70 px-4 py-5 text-sm text-neutral-700">
+-              Horario no disponible ahora, escríbeme por WhatsApp.
++              Horario no disponible ahora.
+             </div>
+           ) : (
+             <div className="grid gap-4 sm:grid-cols-2">
+               {schedule.map((day) => (
+                 <div
+*** End Patch
+2026-01-10T11:44:30.628811Z  INFO Shutting down Codex instance
+2026-01-10T11:44:39.224891Z  INFO Resuming rollout from "/home/vibecode/.codex/sessions/2026/01/08/rollout-2026-01-08T12-24-50-019b9d91-195b-7c01-bd7e-5d7623e2c143.jsonl"
+2026-01-10T11:44:39.239526Z  INFO Resumed rollout with 1165 items, conversation ID: Some(ConversationId { uuid: 019b9d91-195b-7c01-bd7e-5d7623e2c143 })
+2026-01-10T11:44:39.239538Z  INFO Resumed rollout successfully from "/home/vibecode/.codex/sessions/2026/01/08/rollout-2026-01-08T12-24-50-019b9d91-195b-7c01-bd7e-5d7623e2c143.jsonl"
+2026-01-10T12:06:16.697747Z  INFO spawning ghost snapshot task
+2026-01-10T12:06:16.808122Z  INFO ghost snapshot blocking task finished
+2026-01-10T12:06:16.808151Z  INFO ghost commit captured: 509b78d20a7f6224f3ff33c07314f8f380a22054
+2026-01-10T12:06:16.808157Z  INFO ghost snapshot gate marked ready
+2026-01-10T12:06:48.687666Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Update File: src/app/api/horario/route.ts
+@@
+-    const rows = csv
+-      .split("\n")
+-      .map((r) => r.trim())
+-      .filter(Boolean);
+-    const headers = rows.shift()?.split(",").map((h) => h.trim().toUpperCase());
++    const lines = csv
++      .split("\n")
++      .map((r) => r.trim())
++      .filter(Boolean);
++
++    // Encontrar la línea que contiene la cabecera real (DIA,INICIO,...)
++    const headerIndex = lines.findIndex((line) =>
++      /^DIA\s*,\s*INICIO/i.test(line)
++    );
++    if (headerIndex === -1) throw new Error("Header not found");
++
++    const rows = lines.slice(headerIndex);
++    const headers = rows.shift()?.split(",").map((h) => h.trim().toUpperCase());
+*** End Patch
+2026-01-10T12:06:55.393403Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Update File: src/app/page.tsx
+@@
+ async function fetchSchedule(): Promise<DaySchedule[]> {
+   try {
+-    const res = await fetch(`${process.env.NEXT_PUBLIC_VERCEL_URL ? "https://" + process.env.NEXT_PUBLIC_VERCEL_URL : ""}/api/horario`, {
+-      cache: "no-store",
+-    });
++    const base =
++      process.env.NEXT_PUBLIC_VERCEL_URL && !process.env.NEXT_PUBLIC_VERCEL_URL.startsWith("http")
++        ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
++        : process.env.NEXT_PUBLIC_VERCEL_URL || "";
++    const res = await fetch(`${base}/api/horario`, {
++      cache: "no-store",
++      next: { revalidate: 0 },
++    });
+*** End Patch
+2026-01-10T12:07:01.018842Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Update File: src/app/page.tsx
+@@
+   try {
+-    const res = await fetch(`${base}/api/horario`, {
+-      cache: "no-store",
+-      next: { revalidate: 0 },
+-    });
++    const res = await fetch(`${base}/api/horario`, { cache: "no-store" });
+*** End Patch
+2026-01-10T12:07:05.721295Z  INFO ToolCall: shell_command {"command":"cd /home/vibecode/workspace && sed -n '30,80p' src/app/page.tsx"}
+2026-01-10T12:07:10.549372Z  INFO ToolCall: shell_command {"command":"cd /home/vibecode/workspace && sed -n '80,140p' src/app/page.tsx"}
+2026-01-10T12:07:17.610148Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Update File: src/app/page.tsx
+@@
+   try {
+     const base =
+       process.env.NEXT_PUBLIC_VERCEL_URL && !process.env.NEXT_PUBLIC_VERCEL_URL.startsWith("http")
+         ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
+         : process.env.NEXT_PUBLIC_VERCEL_URL || "";
+-    const res = await fetch(`${base}/api/horario`, {
+-      cache: "no-store",
+-      next: { revalidate: 0 },
+-    });
++    const res = await fetch(`${base}/api/horario`, {
++      cache: "no-store",
++    });
+*** End Patch
+2026-01-10T12:16:18.674018Z  INFO spawning ghost snapshot task
+2026-01-10T12:16:18.776834Z  INFO ghost snapshot blocking task finished
+2026-01-10T12:16:18.776984Z  INFO ghost commit captured: 4b745462ebf88cedeb40a5bdc341787239f077a6
+2026-01-10T12:16:18.777132Z  INFO ghost snapshot gate marked ready
+2026-01-10T12:16:24.327451Z  INFO ToolCall: shell_command {"command":"ls /tmp/upload-2188556286"}
+2026-01-10T12:16:28.682712Z  INFO ToolCall: shell_command {"command":"cd /home/vibecode/workspace && cp /tmp/upload-2188556286/favicon.ico src/app/favicon.ico"}
+2026-01-10T12:16:33.943112Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Update File: src/app/layout.tsx
+@@
+ export const metadata: Metadata = {
+-  title: "Anita Pilates | Movimiento consciente en Barcelona",
++  title: "Anita Pilates | Instructora de Pilates",
+   description:
+     "Web personal de Anita, instructora de pilates en Barcelona. Clases online, series grupales bimensuales y bienestar consciente.",
+ };
+*** End Patch
+2026-01-10T12:16:40.220390Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Update File: src/app/page.tsx
+@@
+ const navLinks = [
+   { label: "Clases", href: "#clases" },
+   { label: "Eventos", href: "#eventos" },
+   { label: "Centros BCN", href: "#centros" },
++  { label: "Mi horario", href: "#horario" },
+   { label: "Contacto", href: "#contacto" },
+ ];
+*** End Patch
+2026-01-10T12:16:46.464439Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Update File: src/app/page.tsx
+@@
+         <nav className="hidden md:flex items-center gap-6 text-sm uppercase tracking-[0.18em] text-neutral-700">
+           {navLinks.map((link) => (
+             <a
+               key={link.href}
+               href={link.href}
+               className="hover:text-[#1f1b18] transition-colors"
+             >
+               {link.label}
+             </a>
+           ))}
+-          <a
+-            href="#contacto"
+-            className="rounded-full border border-[#c9c0b5] px-4 py-2 text-xs font-semibold hover:bg-[#e6dfd4] transition-colors"
+-          >
+-            Hablar con Anita
+-          </a>
+         </nav>
+*** End Patch
+2026-01-10T12:17:02.579777Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Update File: src/app/page.tsx
+@@
+-      <header className="max-w-6xl mx-auto px-6 lg:px-10 py-10 flex items-center justify-between">
+-        <div className="flex items-center gap-3">
+-          <div className="relative h-12 w-12 overflow-hidden rounded-full border border-[#d8d0c6] shadow-sm bg-white">
+-            <Image
+-              src="/anita-pose.jpg"
+-              alt="Anita Pilates"
+-              fill
+-              className="object-cover"
+-              sizes="48px"
+-              priority
+-            />
+-          </div>
+-          <div className="leading-tight">
+-            <p className="font-serif text-xl tracking-tight">Anita Pilates</p>
+-            <p className="text-sm text-neutral-600">Pilates Reformer · BCN</p>
+-          </div>
+-        </div>
+-        <nav className="hidden md:flex items-center gap-6 text-sm uppercase tracking-[0.18em] text-neutral-700">
+-          {navLinks.map((link) => (
+-            <a
+-              key={link.href}
+-              href={link.href}
+-              className="hover:text-[#1f1b18] transition-colors"
+-            >
+-              {link.label}
+-            </a>
+-          ))}
+-        </nav>
+-      </header>
++      <header className="max-w-6xl mx-auto px-6 lg:px-10 py-8 flex items-center justify-between">
++        <div className="flex items-center gap-3">
++          <div className="relative h-12 w-12 overflow-hidden rounded-full border border-[#d8d0c6] shadow-sm bg-white">
++            <Image
++              src="/anita-pose.jpg"
++              alt="Anita Pilates"
++              fill
++              className="object-cover"
++              sizes="48px"
++              priority
++            />
++          </div>
++          <div className="leading-tight">
++            <p className="font-serif text-xl tracking-tight">Anita Pilates</p>
++            <p className="text-sm text-neutral-600">Pilates Reformer · BCN</p>
++          </div>
++        </div>
++        <input id="nav-toggle" type="checkbox" className="peer hidden" />
++        <label
++          htmlFor="nav-toggle"
++          className="md:hidden flex h-10 w-10 items-center justify-center rounded-full border border-[#d8d0c6] bg-white text-[#1f1b18]"
++        >
++          <span className="sr-only">Abrir menú</span>
++          <svg
++            xmlns="http://www.w3.org/2000/svg"
++            viewBox="0 0 24 24"
++            className="h-5 w-5"
++            fill="none"
++            stroke="currentColor"
++            strokeWidth="2"
++          >
++            <line x1="4" y1="6" x2="20" y2="6" />
++            <line x1="4" y1="12" x2="20" y2="12" />
++            <line x1="4" y1="18" x2="20" y2="18" />
++          </svg>
++        </label>
++        <nav className="hidden md:flex items-center gap-6 text-sm uppercase tracking-[0.18em] text-neutral-700">
++          {navLinks.map((link) => (
++            <a
++              key={link.href}
++              href={link.href}
++              className="hover:text-[#1f1b18] transition-colors"
++            >
++              {link.label}
++            </a>
++          ))}
++        </nav>
++      </header>
++      <div className="md:hidden max-w-6xl mx-auto px-6 pb-6">
++        <div className="peer-checked:block hidden flex-col gap-3 rounded-3xl border border-[#e2d8cb] bg-white/80 p-5 shadow-[0_10px_30px_rgba(0,0,0,0.06)]">
++          {navLinks.map((link) => (
++            <a
++              key={link.href}
++              href={link.href}
++              className="text-sm uppercase tracking-[0.18em] text-neutral-700"
++            >
++              {link.label}
++            </a>
++          ))}
++        </div>
++      </div>
+*** End Patch
+2026-01-10T12:17:08.625268Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Update File: src/app/page.tsx
+@@
+-        <section className="space-y-4 rounded-3xl border border-[#e2d8cb] bg-white/70 p-8 shadow-[0_12px_36px_rgba(0,0,0,0.05)]">
++        <section id="horario" className="space-y-4 rounded-3xl border border-[#e2d8cb] bg-white/70 p-8 shadow-[0_12px_36px_rgba(0,0,0,0.05)]">
+*** End Patch
+2026-01-10T12:30:14.102787Z  INFO spawning ghost snapshot task
+2026-01-10T12:30:14.221196Z  INFO ghost snapshot blocking task finished
+2026-01-10T12:30:14.221225Z  INFO ghost commit captured: d4a32f71285260af8448944cce092e81de39288d
+2026-01-10T12:30:14.221232Z  INFO ghost snapshot gate marked ready
+2026-01-10T12:30:29.777273Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Update File: src/app/page.tsx
+@@
+ async function fetchSchedule(): Promise<DaySchedule[]> {
+   try {
+-    const base =
+-      process.env.NEXT_PUBLIC_VERCEL_URL && !process.env.NEXT_PUBLIC_VERCEL_URL.startsWith("http")
+-        ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
+-        : process.env.NEXT_PUBLIC_VERCEL_URL || "";
+-    const res = await fetch(`${base}/api/horario`, {
+-      cache: "no-store",
+-    });
++    const res = await fetch("/api/horario", { cache: "no-store" });
+     if (!res.ok) throw new Error("bad status");
+     const data = await res.json();
+     return (data.days as DaySchedule[]) || [];
+   } catch {
+     try {
+*** End Patch
+2026-01-10T12:30:48.216521Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Add File: src/app/api/youtube-latest/route.ts
++import { NextResponse } from "next/server";
++
++const CHANNEL_HANDLE_URL = "https://www.youtube.com/@Anita.pilates";
++
++const controllerWithTimeout = (ms: number) => {
++  const controller = new AbortController();
++  const timeout = setTimeout(() => controller.abort(), ms);
++  return { controller, timeout };
++};
++
++async function getChannelIdFromHandle(): Promise<string | null> {
++  const { controller, timeout } = controllerWithTimeout(8000);
++  try {
++    const res = await fetch(CHANNEL_HANDLE_URL, {
++      signal: controller.signal,
++      cache: "no-store",
++    });
++    if (!res.ok) throw new Error("channel page fail");
++    const html = await res.text();
++    const match = html.match(/"channelId":"(UC[^"]+)"/);
++    return match ? match[1] : null;
++  } catch {
++    return null;
++  } finally {
++    clearTimeout(timeout);
++  }
++}
++
++async function fetchFeed(channelId: string): Promise<string | null> {
++  const feedUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
++  const { controller, timeout } = controllerWithTimeout(8000);
++  try {
++    const res = await fetch(feedUrl, {
++      signal: controller.signal,
++      cache: "no-store",
++    });
++    if (!res.ok) throw new Error("feed fail");
++    return await res.text();
++  } catch {
++    return null;
++  } finally {
++    clearTimeout(timeout);
++  }
++}
++
++function parseLatestFromFeed(xml: string): {
++  videoId: string | null;
++  title: string | null;
++  published: string | null;
++} {
++  try {
++    const idMatch = xml.match(/<yt:videoId>([^<]+)<\/yt:videoId>/);
++    const titleMatch = xml.match(/<title>([^<]+)<\/title>/g);
++    const publishedMatch = xml.match(/<published>([^<]+)<\/published>/);
++    const videoId = idMatch ? idMatch[1] : null;
++    // First <title> is channel title; second is latest video
++    const title =
++      titleMatch && titleMatch.length > 1
++        ? titleMatch[1].replace(/<\/?title>/g, "")
++        : null;
++    const published = publishedMatch ? publishedMatch[1] : null;
++    return { videoId, title, published };
++  } catch {
++    return { videoId: null, title: null, published: null };
++  }
++}
++
++export const revalidate = 1800; // 30 min
++
++export async function GET() {
++  try {
++    const channelId = await getChannelIdFromHandle();
++    if (!channelId) throw new Error("no channel id");
++    const xml = await fetchFeed(channelId);
++    if (!xml) throw new Error("no feed");
++    const latest = parseLatestFromFeed(xml);
++    return NextResponse.json(latest);
++  } catch {
++    return NextResponse.json(
++      { videoId: null, title: null, published: null },
++      { status: 200 }
++    );
++  }
++}
+*** End Patch
+2026-01-10T12:31:00.783453Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Add File: src/components/MobileNav.tsx
++/** @jsxImportSource react */
++"use client";
++
++import { useEffect, useState } from "react";
++
++type Link = { label: string; href: string };
++
++export default function MobileNav({ links }: { links: Link[] }) {
++  const [open, setOpen] = useState(false);
++
++  useEffect(() => {
++    if (open) {
++      document.body.style.overflow = "hidden";
++    } else {
++      document.body.style.overflow = "";
++    }
++    return () => {
++      document.body.style.overflow = "";
++    };
++  }, [open]);
++
++  useEffect(() => {
++    const onEsc = (e: KeyboardEvent) => {
++      if (e.key === "Escape") setOpen(false);
++    };
++    window.addEventListener("keydown", onEsc);
++    return () => window.removeEventListener("keydown", onEsc);
++  }, []);
++
++  return (
++    <>
++      <button
++        aria-label="Abrir menú"
++        aria-expanded={open}
++        aria-controls="mobile-nav-panel"
++        onClick={() => setOpen((v) => !v)}
++        className="md:hidden flex h-10 w-10 items-center justify-center rounded-full border border-[#d8d0c6] bg-white text-[#1f1b18]"
++      >
++        <svg
++          xmlns="http://www.w3.org/2000/svg"
++          viewBox="0 0 24 24"
++          className="h-5 w-5"
++          fill="none"
++          stroke="currentColor"
++          strokeWidth="2"
++        >
++          <line x1="4" y1="6" x2="20" y2="6" />
++          <line x1="4" y1="12" x2="20" y2="12" />
++          <line x1="4" y1="18" x2="20" y2="18" />
++        </svg>
++      </button>
++
++      {open && (
++        <div
++          className="fixed inset-0 z-40 bg-black/30 backdrop-blur-[2px] transition-opacity"
++          onClick={() => setOpen(false)}
++        />
++      )}
++
++      <div
++        id="mobile-nav-panel"
++        className={`fixed z-50 right-4 left-4 top-20 rounded-3xl border border-[#e2d8cb] bg-white/90 p-5 shadow-[0_16px_40px_rgba(0,0,0,0.12)] transition-all duration-200 ${
++          open ? "opacity-100 translate-y-0" : "pointer-events-none opacity-0 -translate-y-2"
++        } md:hidden`}
++      >
++        <div className="flex flex-col gap-3">
++          {links.map((link) => (
++            <a
++              key={link.href}
++              href={link.href}
++              className="text-sm uppercase tracking-[0.18em] text-neutral-700"
++              onClick={() => setOpen(false)}
++            >
++              {link.label}
++            </a>
++          ))}
++        </div>
++      </div>
++    </>
++  );
++}
+*** End Patch
+2026-01-10T12:31:18.303317Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Update File: src/app/page.tsx
+@@
+ import Image from "next/image";
++import MobileNav from "../components/MobileNav";
+ 
+ const navLinks = [
+   { label: "Clases", href: "#clases" },
+   { label: "Eventos", href: "#eventos" },
+   { label: "Centros BCN", href: "#centros" },
+@@
+-      <header className="max-w-6xl mx-auto px-6 lg:px-10 py-8 flex items-center justify-between">
++      <header className="max-w-6xl mx-auto px-6 lg:px-10 py-8 flex items-center justify-between">
+         <div className="flex items-center gap-3">
+           <div className="relative h-12 w-12 overflow-hidden rounded-full border border-[#d8d0c6] shadow-sm bg-white">
+             <Image
+               src="/anita-pose.jpg"
+               alt="Anita Pilates"
+@@
+             <p className="text-sm text-neutral-600">Pilates Reformer · BCN</p>
+           </div>
+         </div>
+-        <input id="nav-toggle" type="checkbox" className="peer hidden" />
+-        <label
+-          htmlFor="nav-toggle"
+-          className="md:hidden flex h-10 w-10 items-center justify-center rounded-full border border-[#d8d0c6] bg-white text-[#1f1b18]"
+-        >
+-          <span className="sr-only">Abrir menú</span>
+-          <svg
+-            xmlns="http://www.w3.org/2000/svg"
+-            viewBox="0 0 24 24"
+-            className="h-5 w-5"
+-            fill="none"
+-            stroke="currentColor"
+-            strokeWidth="2"
+-          >
+-            <line x1="4" y1="6" x2="20" y2="6" />
+-            <line x1="4" y1="12" x2="20" y2="12" />
+-            <line x1="4" y1="18" x2="20" y2="18" />
+-          </svg>
+-        </label>
+-        <nav className="hidden md:flex items-center gap-6 text-sm uppercase tracking-[0.18em] text-neutral-700">
++        <MobileNav links={navLinks} />
++        <nav className="hidden md:flex items-center gap-6 text-sm uppercase tracking-[0.18em] text-neutral-700">
+           {navLinks.map((link) => (
+             <a
+               key={link.href}
+               href={link.href}
+               className="hover:text-[#1f1b18] transition-colors"
+             >
+               {link.label}
+             </a>
+           ))}
+         </nav>
+       </header>
+-      <div className="md:hidden max-w-6xl mx-auto px-6 pb-6">
+-        <div className="peer-checked:block hidden flex-col gap-3 rounded-3xl border border-[#e2d8cb] bg-white/80 p-5 shadow-[0_10px_30px_rgba(0,0,0,0.06)]">
+-          {navLinks.map((link) => (
+-            <a
+-              key={link.href}
+-              href={link.href}
+-              className="text-sm uppercase tracking-[0.18em] text-neutral-700"
+-            >
+-              {link.label}
+-            </a>
+-          ))}
+-        </div>
+-      </div>
+*** End Patch
+2026-01-10T12:31:26.221768Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Update File: src/app/page.tsx
+@@
+ const youtubeVideo = {
+-  id: "XD40KDc1Id0",
+-  title: "Reto 21 días · Sesión completa",
+-  url: "https://www.youtube.com/watch?v=XD40KDc1Id0",
++  id: "XD40KDc1Id0",
++  title: "Reto 21 días · Sesión completa",
++  url: "https://www.youtube.com/watch?v=XD40KDc1Id0",
+ };
+@@
+ export default async function Home() {
+-  const schedule = await fetchSchedule();
++  const schedule = await fetchSchedule();
++  const latestVideo = await fetch("/api/youtube-latest", { cache: "no-store" })
++    .then((r) => r.json())
++    .catch(() => ({ videoId: null, title: null, published: null }));
+   return (
+*** End Patch
+2026-01-10T12:31:33.238383Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Update File: src/app/page.tsx
+@@
+-  const latestVideo = await fetch("/api/youtube-latest", { cache: "no-store" })
+-    .then((r) => r.json())
+-    .catch(() => ({ videoId: null, title: null, published: null }));
++  const latestVideo = await fetch("/api/youtube-latest", { cache: "no-store" })
++    .then((r) => r.json() as Promise<{ videoId: string | null; title: string | null; published: string | null }>)
++    .catch(() => ({ videoId: null, title: null, published: null }));
+*** End Patch
+2026-01-10T12:31:48.681850Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Update File: src/app/page.tsx
+@@
+         <section className="rounded-3xl border border-[#e2d8cb] bg-white/70 p-8 lg:p-12 shadow-[0_12px_36px_rgba(0,0,0,0.06)]">
+           <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:gap-10">
+             <div className="space-y-3 lg:w-1/3">
+             <p className="text-xs uppercase tracking-[0.3em] text-neutral-600">
+               Último vídeo
+             </p>
+             <h3 className="text-2xl font-serif tracking-tight text-[#1f1b18]">
+               Entrena conmigo en casa
+             </h3>
+             <p className="text-neutral-700 leading-relaxed">
+-              Sesión completa para activar core, glúteo y control de
+-              respiración al estilo Reformer. Dale play o guárdalo para tu
+-              próxima práctica.
++              Clases de Pilates para entrenar desde casa con control, fuerza y
++              buena técnica. Dale play o guárdalo para tu próxima práctica.
+             </p>
+             <p className="text-sm text-neutral-600">
+               El canal de YouTube es una puerta de entrada al método. El trabajo
+               más profundo lo hacemos en clases presenciales y sesiones 1:1.
+             </p>
+             <a
+-              href={youtubeVideo.url}
++              href={
++                latestVideo.videoId
++                  ? `https://www.youtube.com/watch?v=${latestVideo.videoId}`
++                  : "https://www.youtube.com/@Anita.pilates"
++              }
+               target="_blank"
+               rel="noreferrer"
+               className="inline-flex w-fit items-center gap-2 rounded-full border border-[#c9c0b5] bg-white px-5 py-3 text-sm font-semibold text-[#1f1b18] transition-colors hover:bg-[#e6dfd4]"
+             >
+               Ver en YouTube
+               <span aria-hidden>→</span>
+             </a>
+             </div>
+-            <a
+-              href={youtubeVideo.url}
+-              target="_blank"
+-              rel="noreferrer"
+-              className="group relative block overflow-hidden rounded-2xl border border-[#e2d8cb] bg-[#f3f0eb]"
+-            >
+-              <Image
+-                src={`https://i.ytimg.com/vi/${youtubeVideo.id}/hqdefault.jpg`}
+-                alt={youtubeVideo.title}
+-                width={1200}
+-                height={675}
+-                className="w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+-                unoptimized
+-              />
+-              <div className="absolute inset-0 bg-black/15 group-hover:bg-black/25 transition-colors" />
+-              <div className="absolute inset-0 flex items-center justify-center">
+-                <span className="h-14 w-14 rounded-full bg-white/85 text-[#1f1b18] flex items-center justify-center text-lg font-semibold shadow-lg">
+-                  ▶
+-                </span>
+-              </div>
+-            </a>
++            {latestVideo.videoId ? (
++              <div className="relative w-full overflow-hidden rounded-2xl border border-[#e2d8cb] bg-[#f3f0eb] shadow-[0_12px_30px_rgba(0,0,0,0.08)]">
++                <div className="relative pb-[56.25%]">
++                  <iframe
++                    title={latestVideo.title ?? "Último vídeo de Anita"}
++                    src={`https://www.youtube.com/embed/${latestVideo.videoId}`}
++                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
++                    allowFullScreen
++                    className="absolute inset-0 h-full w-full"
++                  />
++                </div>
++              </div>
++            ) : (
++              <div className="rounded-2xl border border-[#e2d8cb] bg-white/80 p-6 text-sm text-neutral-700">
++                Nuevo vídeo muy pronto.
++              </div>
++            )}
+             </div>
+         </section>
+*** End Patch
+2026-01-10T12:31:54.563423Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Update File: src/app/page.tsx
+@@
+ const navLinks = [
+   { label: "Clases", href: "#clases" },
+   { label: "Eventos", href: "#eventos" },
+   { label: "Centros BCN", href: "#centros" },
+   { label: "Mi horario", href: "#horario" },
+*** End Patch
+2026-01-10T12:32:02.068197Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Update File: src/app/page.tsx
+@@
+-const youtubeVideo = {
+-  id: "XD40KDc1Id0",
+-  title: "Reto 21 días · Sesión completa",
+-  url: "https://www.youtube.com/watch?v=XD40KDc1Id0",
+-};
+-
+ type ClassEntry = {
+   DIA: string;
+   INICIO: string;
+   FIN: string;
+*** End Patch
+2026-01-10T15:31:42.046528Z  INFO Resuming rollout from "/home/vibecode/.codex/sessions/2026/01/08/rollout-2026-01-08T12-24-50-019b9d91-195b-7c01-bd7e-5d7623e2c143.jsonl"
+2026-01-10T15:31:42.062630Z  INFO Resumed rollout with 1307 items, conversation ID: Some(ConversationId { uuid: 019b9d91-195b-7c01-bd7e-5d7623e2c143 })
+2026-01-10T15:31:42.062642Z  INFO Resumed rollout successfully from "/home/vibecode/.codex/sessions/2026/01/08/rollout-2026-01-08T12-24-50-019b9d91-195b-7c01-bd7e-5d7623e2c143.jsonl"
+2026-01-10T15:34:38.333572Z  INFO Shutting down Codex instance
+2026-01-10T15:34:48.506346Z  INFO Resuming rollout from "/home/vibecode/.codex/sessions/2026/01/08/rollout-2026-01-08T12-24-50-019b9d91-195b-7c01-bd7e-5d7623e2c143.jsonl"
+2026-01-10T15:34:48.522056Z  INFO Resumed rollout with 1307 items, conversation ID: Some(ConversationId { uuid: 019b9d91-195b-7c01-bd7e-5d7623e2c143 })
+2026-01-10T15:34:48.522069Z  INFO Resumed rollout successfully from "/home/vibecode/.codex/sessions/2026/01/08/rollout-2026-01-08T12-24-50-019b9d91-195b-7c01-bd7e-5d7623e2c143.jsonl"
+2026-01-10T15:40:03.159123Z  INFO spawning ghost snapshot task
+2026-01-10T15:40:03.274390Z  INFO ghost snapshot blocking task finished
+2026-01-10T15:40:03.274419Z  INFO ghost commit captured: 4616666e8aa35d7763ab89fe8999fe4596e99c44
+2026-01-10T15:40:03.274425Z  INFO ghost snapshot gate marked ready
+2026-01-10T15:40:32.617611Z  INFO ToolCall: shell_command {"command":"cd /home/vibecode/workspace && curl -L --silent https://www.youtube.com/@Anita.pilates | rg -o 'channelId\":\"(UC[^\"]+)' -m1"}
+2026-01-10T15:40:39.985784Z  INFO ToolCall: shell_command {"command":"cd /home/vibecode/workspace && curl -L --silent https://www.youtube.com/@Anita.pilates | grep -o 'channelId\":\"UC[^\" ]*' | head -n1"}
+2026-01-10T15:40:47.908817Z  INFO ToolCall: shell_command {"command":"cd /home/vibecode/workspace && curl -I https://www.youtube.com/feeds/videos.xml?channel_id=@Anita.pilates"}
+2026-01-10T15:41:09.097900Z  INFO ToolCall: shell_command {"command":"cd /home/vibecode/workspace && curl -I https://www.youtube.com/feeds/videos.xml?user=Anita.pilates"}
+2026-01-10T15:41:19.494049Z  INFO ToolCall: shell_command {"command":"cd /home/vibecode/workspace && curl -s 'https://www.youtube.com/@Anita.pilates/videos' | grep -o 'channelId\":\"UC[^\" ]*' | head -n1"}
+2026-01-10T15:41:24.714828Z  INFO ToolCall: shell_command {"command":"cd /home/vibecode/workspace && curl -s -L -H 'user-agent: Mozilla/5.0' https://www.youtube.com/@Anita.pilates | grep -o 'channelId\":\"UC[^\" ]*' | head -n1"}
+2026-01-10T15:41:31.004416Z  INFO ToolCall: shell_command {"command":"cd /home/vibecode/workspace && curl -s -L -H 'user-agent: Mozilla/5.0' https://m.youtube.com/@Anita.pilates | grep -o 'channelId\":\"UC[^\" ]*' | head -n1"}
+2026-01-10T15:41:36.280731Z  INFO ToolCall: shell_command {"command":"cd /home/vibecode/workspace && curl -s -L -H 'user-agent: Mozilla/5.0' https://www.youtube.com/@anitapilates | grep -o 'channelId\":\"UC[^\" ]*' | head -n1"}
+2026-01-10T15:41:44.134198Z  INFO ToolCall: shell_command {"command":"cd /home/vibecode/workspace && curl -s 'https://www.youtube.com/oembed?url=https://www.youtube.com/@Anita.pilates&format=json'"}
+2026-01-10T15:42:05.591800Z  INFO ToolCall: shell_command {"command":"cd /home/vibecode/workspace && curl -s 'https://www.youtube.com/oembed?url=https://www.youtube.com/@Anita.pilates/videos&format=json'"}
+2026-01-10T15:42:13.537224Z  INFO ToolCall: shell_command {"command":"cd /home/vibecode/workspace && curl -s -L -H 'user-agent: Mozilla/5.0' 'https://www.youtube.com/results?search_query=anita+pilates' | grep -o 'channelId\":\"UC[^\" ]*' | head -n5"}
+2026-01-10T15:42:23.518771Z  INFO ToolCall: shell_command {"command":"cd /home/vibecode/workspace && curl -s -L -H 'user-agent: Mozilla/5.0' 'https://www.youtube.com/results?search_query=%22Anita+Pilates%22+Barcelona' | grep -o 'channelId\":\"UC[^\" ]*' | head -n3"}
+2026-01-10T15:42:29.981335Z  INFO ToolCall: shell_command {"command":"cd /home/vibecode/workspace && curl -I https://www.youtube.com/feeds/videos.xml?channel_id=UCvmOK8MkYb9VTjzpC2PX8SA"}
+2026-01-10T15:42:55.780800Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Update File: src/app/api/youtube-latest/route.ts
+@@
+-import { NextResponse } from "next/server";
+-
+-const CHANNEL_HANDLE_URL = "https://www.youtube.com/@Anita.pilates";
++import { NextResponse } from "next/server";
+ 
+ const controllerWithTimeout = (ms: number) => {
+   const controller = new AbortController();
+   const timeout = setTimeout(() => controller.abort(), ms);
+   return { controller, timeout };
+ };
+ 
+-async function getChannelIdFromHandle(): Promise<string | null> {
+-  const { controller, timeout } = controllerWithTimeout(8000);
+-  try {
+-    const res = await fetch(CHANNEL_HANDLE_URL, {
+-      signal: controller.signal,
+-      cache: "no-store",
+-    });
+-    if (!res.ok) throw new Error("channel page fail");
+-    const html = await res.text();
+-    const match = html.match(/"channelId":"(UC[^"]+)"/);
+-    return match ? match[1] : null;
+-  } catch {
+-    return null;
+-  } finally {
+-    clearTimeout(timeout);
+-  }
+-}
+-
+-async function fetchFeed(channelId: string): Promise<string | null> {
++async function fetchFeed(channelId: string): Promise<{ xml: string | null; debug?: any }> {
+   const feedUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
+   const { controller, timeout } = controllerWithTimeout(8000);
+   try {
+     const res = await fetch(feedUrl, {
+       signal: controller.signal,
+       cache: "no-store",
+     });
+-    if (!res.ok) throw new Error("feed fail");
+-    return await res.text();
+-  } catch {
+-    return null;
++    const body = await res.text();
++    if (!res.ok) {
++      return {
++        xml: null,
++        debug: {
++          status: res.status,
++          contentType: res.headers.get("content-type"),
++          snippet: body.slice(0, 200),
++        },
++      };
++    }
++    return { xml: body };
++  } catch (err: any) {
++    return {
++      xml: null,
++      debug: { error: err?.message ?? "fetch error" },
++    };
+   } finally {
+     clearTimeout(timeout);
+   }
+ }
+@@
+ export async function GET() {
+   try {
+-    const channelId = await getChannelIdFromHandle();
+-    if (!channelId) throw new Error("no channel id");
+-    const xml = await fetchFeed(channelId);
+-    if (!xml) throw new Error("no feed");
+-    const latest = parseLatestFromFeed(xml);
++    const channelId =
++      process.env.YOUTUBE_CHANNEL_ID?.trim() ||
++      "UCvmOK8MkYb9VTjzpC2PX8SA";
++
++    const { xml, debug } = await fetchFeed(channelId);
++    if (!xml) {
++      return NextResponse.json(
++        { videoId: null, title: null, published: null, debug },
++        { status: 200 }
++      );
++    }
++    const latest = parseLatestFromFeed(xml);
+     return NextResponse.json(latest);
+   } catch (e: any) {
+-    return NextResponse.json(
+-      { videoId: null, title: null, published: null },
+-      { status: 200 }
+-    );
++    return NextResponse.json({
++      videoId: null,
++      title: null,
++      published: null,
++      debug: { error: e?.message ?? "unknown" },
++    });
+   }
+ }
+*** End Patch
+2026-01-10T15:43:01.040256Z  INFO ToolCall: shell_command {"command":"cd /home/vibecode/workspace && cat src/app/api/youtube-latest/route.ts"}
+2026-01-10T15:43:23.122898Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Update File: src/app/api/youtube-latest/route.ts
+@@
+-import { NextResponse } from "next/server";
+-
+-const CHANNEL_HANDLE_URL = "https://www.youtube.com/@Anita.pilates";
+-
+-const controllerWithTimeout = (ms: number) => {
+-  const controller = new AbortController();
+-  const timeout = setTimeout(() => controller.abort(), ms);
+-  return { controller, timeout };
+-};
+-
+-async function getChannelIdFromHandle(): Promise<string | null> {
+-  const { controller, timeout } = controllerWithTimeout(8000);
+-  try {
+-    const res = await fetch(CHANNEL_HANDLE_URL, {
+-      signal: controller.signal,
+-      cache: "no-store",
+-    });
+-    if (!res.ok) throw new Error("channel page fail");
+-    const html = await res.text();
+-    const match = html.match(/"channelId":"(UC[^"]+)"/);
+-    return match ? match[1] : null;
+-  } catch {
+-    return null;
+-  } finally {
+-    clearTimeout(timeout);
+-  }
+-}
+-
+-async function fetchFeed(channelId: string): Promise<string | null> {
+-  const feedUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
+-  const { controller, timeout } = controllerWithTimeout(8000);
+-  try {
+-    const res = await fetch(feedUrl, {
+-      signal: controller.signal,
+-      cache: "no-store",
+-    });
+-    if (!res.ok) throw new Error("feed fail");
+-    return await res.text();
+-  } catch {
+-    return null;
+-  } finally {
+-    clearTimeout(timeout);
+-  }
+-}
++import { NextResponse } from "next/server";
++
++const DEFAULT_CHANNEL_ID = "UCvmOK8MkYb9VTjzpC2PX8SA";
++
++const controllerWithTimeout = (ms: number) => {
++  const controller = new AbortController();
++  const timeout = setTimeout(() => controller.abort(), ms);
++  return { controller, timeout };
++};
++
++async function fetchFeed(channelId: string): Promise<{ xml: string | null; debug?: any }> {
++  const feedUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
++  const { controller, timeout } = controllerWithTimeout(8000);
++  try {
++    const res = await fetch(feedUrl, {
++      signal: controller.signal,
++      cache: "no-store",
++    });
++    const body = await res.text();
++    if (!res.ok) {
++      return {
++        xml: null,
++        debug: {
++          status: res.status,
++          contentType: res.headers.get("content-type"),
++          snippet: body.slice(0, 200),
++        },
++      };
++    }
++    return { xml: body };
++  } catch (err: any) {
++    return {
++      xml: null,
++      debug: { error: err?.message ?? "fetch error" },
++    };
++  } finally {
++    clearTimeout(timeout);
++  }
++}
+@@
+ export const revalidate = 1800; // 30 min
+ 
+ export async function GET() {
+   try {
+-    const channelId = await getChannelIdFromHandle();
+-    if (!channelId) throw new Error("no channel id");
+-    const xml = await fetchFeed(channelId);
+-    if (!xml) throw new Error("no feed");
+-    const latest = parseLatestFromFeed(xml);
+-    return NextResponse.json(latest);
+-  } catch {
+-    return NextResponse.json(
+-      { videoId: null, title: null, published: null },
+-      { status: 200 }
+-    );
++    const channelId =
++      process.env.YOUTUBE_CHANNEL_ID?.trim() || DEFAULT_CHANNEL_ID;
++
++    const { xml, debug } = await fetchFeed(channelId);
++    if (!xml) {
++      return NextResponse.json({
++        videoId: null,
++        title: null,
++        published: null,
++        debug,
++      });
++    }
++    const latest = parseLatestFromFeed(xml);
++    return NextResponse.json(latest);
++  } catch (e: any) {
++    return NextResponse.json({
++      videoId: null,
++      title: null,
++      published: null,
++      debug: { error: e?.message ?? "unknown" },
++    });
+   }
+ }
+*** End Patch
+2026-01-10T15:43:37.412678Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Update File: src/app/page.tsx
+@@
+ import Image from "next/image";
+ import MobileNav from "../components/MobileNav";
++import { headers } from "next/headers";
+ 
+ const navLinks = [
+   { label: "Clases", href: "#clases" },
+   { label: "Eventos", href: "#eventos" },
+   { label: "Centros BCN", href: "#centros" },
+   { label: "Mi horario", href: "#horario" },
+   { label: "Contacto", href: "#contacto" },
+ ];
+@@
+ async function fetchSchedule(): Promise<DaySchedule[]> {
+   try {
+-    const res = await fetch("/api/horario", { cache: "no-store" });
++    const hdrs = headers();
++    const host = hdrs.get("host");
++    const origin =
++      process.env.NEXT_PUBLIC_VERCEL_URL && !process.env.NEXT_PUBLIC_VERCEL_URL.startsWith("http")
++        ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
++        : process.env.NEXT_PUBLIC_VERCEL_URL ||
++          (host ? `http://${host}` : "http://localhost:3000");
++
++    const res = await fetch(`${origin}/api/horario`, { cache: "no-store" });
+@@
+   } catch {
+     try {
+-      const res = await fetch("http://localhost:3000/api/horario", {
++      const res = await fetch("http://localhost:3000/api/horario", {
+         cache: "no-store",
+       });
+@@
+   }
+ }
+*** End Patch
+2026-01-10T15:43:46.783521Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Update File: src/app/page.tsx
+@@
+ export default async function Home() {
+   const schedule = await fetchSchedule();
+-  const latestVideo = await fetch("/api/youtube-latest", { cache: "no-store" })
+-    .then((r) => r.json() as Promise<{ videoId: string | null; title: string | null; published: string | null }>)
+-    .catch(() => ({ videoId: null, title: null, published: null }));
++  const hdrs = headers();
++  const host = hdrs.get("host");
++  const origin =
++    process.env.NEXT_PUBLIC_VERCEL_URL && !process.env.NEXT_PUBLIC_VERCEL_URL.startsWith("http")
++      ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
++      : process.env.NEXT_PUBLIC_VERCEL_URL ||
++        (host ? `http://${host}` : "http://localhost:3000");
++  const latestVideo = await fetch(`${origin}/api/youtube-latest`, {
++    cache: "no-store",
++  })
++    .then(
++      (r) =>
++        r.json() as Promise<{
++          videoId: string | null;
++          title: string | null;
++          published: string | null;
++        }>
++    )
++    .catch(() => ({ videoId: null, title: null, published: null }));
+*** End Patch
+2026-01-10T15:43:52.286662Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Update File: src/app/page.tsx
+@@
+-            <h3 className="text-2xl font-serif tracking-tight text-[#1f1b18]">
++            <h3 className="text-2xl font-serif tracking-tight text-[#1f1b18]">
+               Entrena conmigo en casa
+             </h3>
+             <p className="text-neutral-700 leading-relaxed">
+               Clases de Pilates para entrenar desde casa con control, fuerza y
+               buena técnica. Dale play o guárdalo para tu próxima práctica.
+*** End Patch
+2026-01-10T15:43:57.178882Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Update File: src/app/page.tsx
+@@
+-          <p className="text-xs uppercase tracking-[0.3em] text-neutral-600">
++          <p className="text-xs uppercase tracking-[0.3em] text-neutral-600">
+             Mi horario semanal
+           </p>
+*** End Patch
+2026-01-10T15:48:40.923271Z  INFO spawning ghost snapshot task
+2026-01-10T15:48:41.024468Z  INFO ghost snapshot blocking task finished
+2026-01-10T15:48:41.024500Z  INFO ghost commit captured: 599fe7f26e9c4797f69deec10469ca0f4fca2fdd
+2026-01-10T15:48:41.024507Z  INFO ghost snapshot gate marked ready
+2026-01-10T15:48:46.285131Z  WARN stream disconnected - retrying turn (1/5 in 185ms)...
+2026-01-10T15:48:59.624213Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Update File: src/app/page.tsx
+@@
+-import { headers } from "next/headers";
+@@
+ async function fetchSchedule(): Promise<DaySchedule[]> {
+   try {
+-    const hdrs = headers();
+-    const host = hdrs.get("host");
+-    const origin =
+-      process.env.NEXT_PUBLIC_VERCEL_URL && !process.env.NEXT_PUBLIC_VERCEL_URL.startsWith("http")
+-        ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
+-        : process.env.NEXT_PUBLIC_VERCEL_URL ||
+-          (host ? `http://${host}` : "http://localhost:3000");
+-
+-    const res = await fetch(`${origin}/api/horario`, { cache: "no-store" });
++    const res = await fetch("/api/horario", { cache: "no-store" });
+     if (!res.ok) throw new Error("bad status");
+     const data = await res.json();
+     return (data.days as DaySchedule[]) || [];
+   } catch {
+     try {
+@@
+ export default async function Home() {
+   const schedule = await fetchSchedule();
+-  const hdrs = headers();
+-  const host = hdrs.get("host");
+-  const origin =
+-    process.env.NEXT_PUBLIC_VERCEL_URL && !process.env.NEXT_PUBLIC_VERCEL_URL.startsWith("http")
+-      ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
+-      : process.env.NEXT_PUBLIC_VERCEL_URL ||
+-        (host ? `http://${host}` : "http://localhost:3000");
+-  const latestVideo = await fetch(`${origin}/api/youtube-latest`, {
+-    cache: "no-store",
+-  })
++  const latestVideo = await fetch(`/api/youtube-latest`, { cache: "no-store" })
+     .then(
+       (r) =>
+         r.json() as Promise<{
+           videoId: string | null;
+           title: string | null;
+*** End Patch
+2026-01-10T15:49:05.812050Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Update File: src/app/page.tsx
+@@
+   } catch {
+-    try {
+-      const res = await fetch("http://localhost:3000/api/horario", {
+-        cache: "no-store",
+-      });
+-      if (!res.ok) throw new Error("fallback bad status");
+-      const data = await res.json();
+-      return (data.days as DaySchedule[]) || [];
+-    } catch {
+-      return [];
+-    }
++    return [];
+   }
+ }
+*** End Patch
+2026-01-10T15:52:01.637501Z  INFO spawning ghost snapshot task
+2026-01-10T15:52:01.734322Z  INFO ghost snapshot blocking task finished
+2026-01-10T15:52:01.734354Z  INFO ghost commit captured: 2fe978a164d138896ae044ef28c4a98d6f94b5d3
+2026-01-10T15:52:01.734361Z  INFO ghost snapshot gate marked ready
+2026-01-10T15:52:07.007627Z  WARN stream disconnected - retrying turn (1/5 in 207ms)...
+2026-01-10T15:52:23.659904Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Delete File: src/app/api/youtube-latest/route.ts
+*** End Patch
+2026-01-10T15:52:36.457655Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Add File: src/app/api/youtube-latest/route.ts
++import { NextResponse } from "next/server";
++
++const CHANNEL_ID = process.env.YOUTUBE_CHANNEL_ID?.trim() || "UCvmOK8MkYb9VTjzpC2PX8SA";
++const FEED_URL = `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`;
++
++const controllerWithTimeout = (ms: number) => {
++  const controller = new AbortController();
++  const timeout = setTimeout(() => controller.abort(), ms);
++  return { controller, timeout };
++};
++
++function parseLatestFromFeed(xml: string) {
++  try {
++    const idMatch = xml.match(/<yt:videoId>([^<]+)<\/yt:videoId>/);
++    const titleMatch = xml.match(/<title>([^<]+)<\/title>/g);
++    const publishedMatch = xml.match(/<published>([^<]+)<\/published>/);
++    const videoId = idMatch ? idMatch[1] : null;
++    const title =
++      titleMatch && titleMatch.length > 1
++        ? titleMatch[1].replace(/<\/?title>/g, "")
++        : null;
++    const published = publishedMatch ? publishedMatch[1] : null;
++    return { videoId, title, published };
++  } catch (e: any) {
++    return { videoId: null, title: null, published: null, debug: { error: e?.message ?? "parse error" } };
++  }
++}
++
++export const revalidate = 900; // 15 min
++
++export async function GET() {
++  const { controller, timeout } = controllerWithTimeout(8000);
++  try {
++    const res = await fetch(FEED_URL, {
++      signal: controller.signal,
++      cache: "no-store",
++    });
++    const body = await res.text();
++    if (!res.ok) {
++      return NextResponse.json({
++        videoId: null,
++        title: null,
++        published: null,
++        debug: {
++          status: res.status,
++          contentType: res.headers.get("content-type"),
++          snippet: body.slice(0, 200),
++        },
++      });
++    }
++    const latest = parseLatestFromFeed(body);
++    return NextResponse.json(latest);
++  } catch (err: any) {
++    return NextResponse.json({
++      videoId: null,
++      title: null,
++      published: null,
++      debug: { error: err?.message ?? "fetch error" },
++    });
++  } finally {
++    clearTimeout(timeout);
++  }
++}
+*** End Patch
+2026-01-10T15:52:53.012342Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Add File: src/components/WeeklySchedule.tsx
++/** @jsxImportSource react */
++"use client";
++
++import { useEffect, useState } from "react";
++
++type ClassEntry = {
++  DIA: string;
++  INICIO: string;
++  FIN: string;
++  CENTRO: string;
++  TIPO: string;
++};
++
++type DaySchedule = {
++  day: string;
++  classes: ClassEntry[];
++};
++
++export default function WeeklySchedule() {
++  const [days, setDays] = useState<DaySchedule[] | null>(null);
++
++  useEffect(() => {
++    let mounted = true;
++    fetch("/api/horario", { cache: "no-store" })
++      .then((r) => r.json())
++      .then((data) => {
++        if (!mounted) return;
++        setDays((data?.days as DaySchedule[]) ?? []);
++      })
++      .catch(() => {
++        if (!mounted) return;
++        setDays([]);
++      });
++    return () => {
++      mounted = false;
++    };
++  }, []);
++
++  if (days === null) {
++    return (
++      <div className="rounded-2xl border border-[#e2d8cb] bg-white/70 px-4 py-5 text-sm text-neutral-700">
++        Cargando horario...
++      </div>
++    );
++  }
++
++  if (!days.length) {
++    return (
++      <div className="rounded-2xl border border-[#e2d8cb] bg-white/70 px-4 py-5 text-sm text-neutral-700">
++        Horario no disponible ahora.
++      </div>
++    );
++  }
++
++  return (
++    <div className="grid gap-4 sm:grid-cols-2">
++      {days.map((day) => (
++        <div
++          key={day.day}
++          className="rounded-2xl border border-[#e2d8cb] bg-white/80 p-4 shadow-[0_8px_24px_rgba(0,0,0,0.04)] flex flex-col gap-3"
++        >
++          <div className="flex items-center justify-between">
++            <p className="text-sm uppercase tracking-[0.22em] text-neutral-600">
++              {day.day}
++            </p>
++            <span className="h-px flex-1 mx-3 bg-[#e2d8cb]" />
++            <span className="text-xs text-neutral-500">
++              {day.classes.length} clase{day.classes.length > 1 ? "s" : ""}
++            </span>
++          </div>
++          <div className="space-y-3">
++            {day.classes.map((clase, idx) => (
++              <div
++                key={`${clase.DIA}-${clase.INICIO}-${idx}`}
++                className="rounded-xl border border-[#e9dfd2] bg-white px-3 py-3"
++              >
++                <p className="text-sm font-semibold text-[#1f1b18]">
++                  {clase.INICIO} – {clase.FIN}
++                </p>
++                <p className="text-sm text-neutral-700">{clase.CENTRO}</p>
++                <p className="text-xs uppercase tracking-[0.18em] text-neutral-600">
++                  {clase.TIPO}
++                </p>
++              </div>
++            ))}
++          </div>
++        </div>
++      ))}
++    </div>
++  );
++}
+*** End Patch
+2026-01-10T15:53:06.052952Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Add File: src/components/LatestVideo.tsx
++/** @jsxImportSource react */
++"use client";
++
++import { useEffect, useState } from "react";
++
++type VideoData = {
++  videoId: string | null;
++  title: string | null;
++  published: string | null;
++  debug?: any;
++};
++
++export default function LatestVideo() {
++  const [video, setVideo] = useState<VideoData | null>(null);
++
++  useEffect(() => {
++    let mounted = true;
++    fetch("/api/youtube-latest", { cache: "no-store" })
++      .then((r) => r.json())
++      .then((data: VideoData) => {
++        if (!mounted) return;
++        setVideo(data);
++      })
++      .catch(() => {
++        if (!mounted) return;
++        setVideo({ videoId: null, title: null, published: null });
++      });
++    return () => {
++      mounted = false;
++    };
++  }, []);
++
++  if (!video) {
++    return (
++      <div className="rounded-2xl border border-[#e2d8cb] bg-white/80 p-6 text-sm text-neutral-700">
++        Cargando vídeo...
++      </div>
++    );
++  }
++
++  if (!video.videoId) {
++    return (
++      <div className="rounded-2xl border border-[#e2d8cb] bg-white/80 p-6 text-sm text-neutral-700">
++        Nuevo vídeo muy pronto.
++      </div>
++    );
++  }
++
++  return (
++    <div className="relative w-full overflow-hidden rounded-2xl border border-[#e2d8cb] bg-[#f3f0eb] shadow-[0_12px_30px_rgba(0,0,0,0.08)]">
++      <div className="relative pb-[56.25%]">
++        <iframe
++          title={video.title ?? "Último vídeo de Anita"}
++          src={`https://www.youtube.com/embed/${video.videoId}`}
++          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
++          allowFullScreen
++          className="absolute inset-0 h-full w-full"
++        />
++      </div>
++    </div>
++  );
++}
+*** End Patch
+2026-01-10T15:53:38.598156Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Update File: src/app/page.tsx
+@@
+-import WeeklySchedule from "../components/WeeklySchedule";
++import WeeklySchedule from "../components/WeeklySchedule";
++import LatestVideo from "../components/LatestVideo";
+*** End Patch
+2026-01-10T15:53:46.843127Z  INFO ToolCall: shell_command {"command":"cd /home/vibecode/workspace && rg \"WeeklySchedule\" -n src/app/page.tsx"}
+2026-01-10T15:53:51.927991Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Update File: src/app/page.tsx
+@@
+-import Image from "next/image";
+-import MobileNav from "../components/MobileNav";
++import Image from "next/image";
++import MobileNav from "../components/MobileNav";
++import WeeklySchedule from "../components/WeeklySchedule";
++import LatestVideo from "../components/LatestVideo";
+*** End Patch
+2026-01-10T15:53:58.320354Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Update File: src/app/page.tsx
+@@
+ type DaySchedule = {
+   day: string;
+   classes: ClassEntry[];
+ };
+ 
+-async function fetchSchedule(): Promise<DaySchedule[]> {
+-  try {
+-    const res = await fetch("/api/horario", { cache: "no-store" });
+-    if (!res.ok) throw new Error("bad status");
+-    const data = await res.json();
+-    return (data.days as DaySchedule[]) || [];
+-  } catch {
+-    return [];
+-  }
+-}
+-
+ const WhatsappFloat = () => (
+*** End Patch
+2026-01-10T15:54:03.398900Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Update File: src/app/page.tsx
+@@
+ export default async function Home() {
+-  const schedule = await fetchSchedule();
+   const latestVideo = await fetch(`/api/youtube-latest`, { cache: "no-store" })
+*** End Patch
+2026-01-10T15:54:09.827296Z  INFO ToolCall: shell_command {"command":"cd /home/vibecode/workspace && rg \"Mi horario semanal\" -n -C 2 src/app/page.tsx"}
+2026-01-10T15:54:26.996810Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Update File: src/app/page.tsx
+@@
+-        <section id="horario" className="space-y-4 rounded-3xl border border-[#e2d8cb] bg-white/70 p-8 shadow-[0_12px_36px_rgba(0,0,0,0.05)]">
++        <section id="horario" className="space-y-4 rounded-3xl border border-[#e2d8cb] bg-white/70 p-8 shadow-[0_12px_36px_rgba(0,0,0,0.05)]">
+           <p className="text-xs uppercase tracking-[0.3em] text-neutral-600">
+             Mi horario semanal
+           </p>
+           <h2 className="text-3xl font-serif tracking-tight text-[#1f1b18]">
+             Mi horario de esta semana
+           </h2>
+           <p className="text-neutral-700">
+             Aquí tienes dónde doy clases esta semana en Barcelona.
+           </p>
+ 
+-          {schedule.length === 0 ? (
+-            <div className="rounded-2xl border border-[#e2d8cb] bg-white/70 px-4 py-5 text-sm text-neutral-700">
+-              Horario no disponible ahora.
+-            </div>
+-          ) : (
+-            <div className="grid gap-4 sm:grid-cols-2">
+-              {schedule.map((day) => (
+-                <div
+-                  key={day.day}
+-                  className="rounded-2xl border border-[#e2d8cb] bg-white/80 p-4 shadow-[0_8px_24px_rgba(0,0,0,0.04)] flex flex-col gap-3"
+-                >
+-                  <div className="flex items-center justify-between">
+-                    <p className="text-sm uppercase tracking-[0.22em] text-neutral-600">
+-                      {day.day}
+-                    </p>
+-                    <span className="h-px flex-1 mx-3 bg-[#e2d8cb]" />
+-                    <span className="text-xs text-neutral-500">
+-                      {day.classes.length} clase{day.classes.length > 1 ? "s" : ""}
+-                    </span>
+-                  </div>
+-                  <div className="space-y-3">
+-                    {day.classes.map((clase, idx) => (
+-                      <div
+-                        key={`${clase.DIA}-${clase.INICIO}-${idx}`}
+-                        className="rounded-xl border border-[#e9dfd2] bg-white px-3 py-3"
+-                      >
+-                        <p className="text-sm font-semibold text-[#1f1b18]">
+-                          {clase.INICIO} – {clase.FIN}
+-                        </p>
+-                        <p className="text-sm text-neutral-700">{clase.CENTRO}</p>
+-                        <p className="text-xs uppercase tracking-[0.18em] text-neutral-600">
+-                          {clase.TIPO}
+-                        </p>
+-                      </div>
+-                    ))}
+-                  </div>
+-                </div>
+-              ))}
+-            </div>
+-          )}
++          <WeeklySchedule />
+         </section>
+*** End Patch
+2026-01-10T15:54:32.498115Z  INFO ToolCall: shell_command {"command":"cd /home/vibecode/workspace && sed -n '310,380p' src/app/page.tsx"}
+2026-01-10T15:54:45.868186Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Update File: src/app/page.tsx
+@@
+-        <section className="space-y-4 rounded-3xl border border-[#e2d8cb] bg-white/70 p-8 shadow-[0_12px_36px_rgba(0,0,0,0.05)]">
++        <section id="horario" className="space-y-4 rounded-3xl border border-[#e2d8cb] bg-white/70 p-8 shadow-[0_12px_36px_rgba(0,0,0,0.05)]">
+           <p className="text-xs uppercase tracking-[0.3em] text-neutral-600">
+             Mi horario semanal
+           </p>
+           <h2 className="text-3xl font-serif tracking-tight text-[#1f1b18]">
+             Mi horario de esta semana
+           </h2>
+           <p className="text-neutral-700">
+             Aquí tienes dónde doy clases esta semana en Barcelona.
+           </p>
+-
+-          {schedule.length === 0 ? (
+-            <div className="rounded-2xl border border-[#e2d8cb] bg-white/70 px-4 py-5 text-sm text-neutral-700">
+-              Horario no disponible ahora.
+-            </div>
+-          ) : (
+-            <div className="grid gap-4 sm:grid-cols-2">
+-              {schedule.map((day) => (
+-                <div
+-                  key={day.day}
+-                  className="rounded-2xl border border-[#e2d8cb] bg-white/80 p-4 shadow-[0_8px_24px_rgba(0,0,0,0.04)] flex flex-col gap-3"
+-                >
+-                  <div className="flex items-center justify-between">
+-                    <p className="text-sm uppercase tracking-[0.22em] text-neutral-600">
+-                      {day.day}
+-                    </p>
+-                    <span className="h-px flex-1 mx-3 bg-[#e2d8cb]" />
+-                    <span className="text-xs text-neutral-500">
+-                      {day.classes.length} clase{day.classes.length > 1 ? "s" : ""}
+-                    </span>
+-                  </div>
+-                  <div className="space-y-3">
+-                    {day.classes.map((clase, idx) => (
+-                      <div
+-                        key={`${clase.DIA}-${clase.INICIO}-${idx}`}
+-                        className="rounded-xl border border-[#e9dfd2] bg-white px-3 py-3"
+-                      >
+-                        <p className="text-sm font-semibold text-[#1f1b18]">
+-                          {clase.INICIO} – {clase.FIN}
+-                        </p>
+-                        <p className="text-sm text-neutral-700">{clase.CENTRO}</p>
+-                        <p className="text-xs uppercase tracking-[0.18em] text-neutral-600">
+-                          {clase.TIPO}
+-                        </p>
+-                      </div>
+-                    ))}
+-                  </div>
+-                </div>
+-              ))}
+-            </div>
+-          )}
++          <WeeklySchedule />
+         </section>
+*** End Patch
+2026-01-10T15:54:55.903503Z  INFO ToolCall: shell_command {"command":"cd /home/vibecode/workspace && rg \"Último vídeo\" -n src/app/page.tsx"}
+2026-01-10T15:55:18.160483Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Update File: src/app/page.tsx
+@@
+-        <section className="rounded-3xl border border-[#e2d8cb] bg-white/70 p-8 lg:p-12 shadow-[0_12px_36px_rgba(0,0,0,0.06)]">
+-          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:gap-10">
+-            <div className="space-y-3 lg:w-1/3">
+-            <p className="text-xs uppercase tracking-[0.3em] text-neutral-600">
+-              Último vídeo
+-            </p>
+-            <h3 className="text-2xl font-serif tracking-tight text-[#1f1b18]">
+-              Entrena conmigo en casa
+-            </h3>
+-            <p className="text-neutral-700 leading-relaxed">
+-              Clases de Pilates para entrenar desde casa con control, fuerza y
+-              buena técnica. Dale play o guárdalo para tu próxima práctica.
+-            </p>
+-            <p className="text-sm text-neutral-600">
+-              El canal de YouTube es una puerta de entrada al método. El trabajo
+-              más profundo lo hacemos en clases presenciales y sesiones 1:1.
+-            </p>
+-            <a
+-              href={
+-                latestVideo.videoId
+-                  ? `https://www.youtube.com/watch?v=${latestVideo.videoId}`
+-                  : "https://www.youtube.com/@Anita.pilates"
+-              }
+-              target="_blank"
+-              rel="noreferrer"
+-              className="inline-flex w-fit items-center gap-2 rounded-full border border-[#c9c0b5] bg-white px-5 py-3 text-sm font-semibold text-[#1f1b18] transition-colors hover:bg-[#e6dfd4]"
+-            >
+-              Ver en YouTube
+-              <span aria-hidden>→</span>
+-            </a>
+-            </div>
+-            {latestVideo.videoId ? (
+-              <div className="relative w-full overflow-hidden rounded-2xl border border-[#e2d8cb] bg-[#f3f0eb] shadow-[0_12px_30px_rgba(0,0,0,0.08)]">
+-                <div className="relative pb-[56.25%]">
+-                  <iframe
+-                    title={latestVideo.title ?? "Último vídeo de Anita"}
+-                    src={`https://www.youtube.com/embed/${latestVideo.videoId}`}
+-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+-                    allowFullScreen
+-                    className="absolute inset-0 h-full w-full"
+-                  />
+-                </div>
+-              </div>
+-            ) : (
+-              <div className="rounded-2xl border border-[#e2d8cb] bg-white/80 p-6 text-sm text-neutral-700">
+-                Nuevo vídeo muy pronto.
+-              </div>
+-            )}
+-            </div>
+-        </section>
++        <section className="rounded-3xl border border-[#e2d8cb] bg-white/70 p-8 lg:p-12 shadow-[0_12px_36px_rgba(0,0,0,0.06)]">
++          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:gap-10">
++            <div className="space-y-3 lg:w-1/3">
++              <p className="text-xs uppercase tracking-[0.3em] text-neutral-600">
++                Último vídeo
++              </p>
++              <h3 className="text-2xl font-serif tracking-tight text-[#1f1b18]">
++                Entrena conmigo en casa
++              </h3>
++              <p className="text-neutral-700 leading-relaxed">
++                Clases de Pilates para entrenar desde casa con control, fuerza y
++                buena técnica. Dale play o guárdalo para tu próxima práctica.
++              </p>
++              <p className="text-sm text-neutral-600">
++                El canal de YouTube es una puerta de entrada al método. El trabajo
++                más profundo lo hacemos en clases presenciales y sesiones 1:1.
++              </p>
++              <a
++                href="https://www.youtube.com/@Anita.pilates"
++                target="_blank"
++                rel="noreferrer"
++                className="inline-flex w-fit items-center gap-2 rounded-full border border-[#c9c0b5] bg-white px-5 py-3 text-sm font-semibold text-[#1f1b18] transition-colors hover:bg-[#e6dfd4]"
++              >
++                Ver en YouTube
++                <span aria-hidden>→</span>
++              </a>
++            </div>
++            <LatestVideo />
++          </div>
++        </section>
+*** End Patch
+2026-01-10T15:55:28.657741Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Update File: src/app/page.tsx
+@@
+-const diferenciales = [
++const diferenciales = [
+   "El método: Pilates clásico basado en control, respiración y precisión, con atención real al movimiento.",
+   "Mat & Reformer: Pilates Mat y Pilates Reformer combinados para fortalecer el cuerpo con técnica y sin impacto.",
+   "Progresión consciente: Clases con progresión cuidada para ganar fuerza, estabilidad y movilidad de forma natural.",
+   "Formación certificada: Instructora de Mat y Reformer por Balanced Body.",
+ ];
+@@
+-const navLinks = [
++const navLinks = [
+   { label: "Clases", href: "#clases" },
+   { label: "Eventos", href: "#eventos" },
+   { label: "Centros BCN", href: "#centros" },
+   { label: "Mi horario", href: "#horario" },
+   { label: "Contacto", href: "#contacto" },
+ ];
+-
+-type ClassEntry = {
+-  DIA: string;
+-  INICIO: string;
+-  FIN: string;
+-  CENTRO: string;
+-  TIPO: string;
+-};
+-
+-type DaySchedule = {
+-  day: string;
+-  classes: ClassEntry[];
+-};
+*** End Patch
+2026-01-10T15:55:34.355287Z  INFO ToolCall: shell_command {"command":"cd /home/vibecode/workspace && rg \"type ClassEntry\" -n src/app/page.tsx"}
+2026-01-10T15:55:40.742872Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Update File: src/app/page.tsx
+@@
+ const navLinks = [
+   { label: "Clases", href: "#clases" },
+   { label: "Eventos", href: "#eventos" },
+   { label: "Centros BCN", href: "#centros" },
+   { label: "Mi horario", href: "#horario" },
+   { label: "Contacto", href: "#contacto" },
+ ];
+ 
+-type ClassEntry = {
+-  DIA: string;
+-  INICIO: string;
+-  FIN: string;
+-  CENTRO: string;
+-  TIPO: string;
+-};
+-
+-type DaySchedule = {
+-  day: string;
+-  classes: ClassEntry[];
+-};
+-
+ const WhatsappFloat = () => (
+*** End Patch
+2026-01-10T15:55:46.980204Z  INFO ToolCall: shell_command {"command":"cd /home/vibecode/workspace && sed -n '60,110p' src/app/page.tsx"}
+2026-01-10T15:55:55.417920Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Update File: src/app/page.tsx
+@@
+ const diferenciales = [
+   "El método: Pilates clásico basado en control, respiración y precisión, con atención real al movimiento.",
+   "Mat & Reformer: Pilates Mat y Pilates Reformer combinados para fortalecer el cuerpo con técnica y sin impacto.",
+   "Progresión consciente: Clases con progresión cuidada para ganar fuerza, estabilidad y movilidad de forma natural.",
+   "Formación certificada: Instructora de Mat y Reformer por Balanced Body.",
+ ];
+ 
+-type ClassEntry = {
+-  DIA: string;
+-  INICIO: string;
+-  FIN: string;
+-  CENTRO: string;
+-  TIPO: string;
+-};
+-
+-type DaySchedule = {
+-  day: string;
+-  classes: ClassEntry[];
+-};
+-
+ const WhatsappFloat = () => (
+*** End Patch
+2026-01-10T15:56:06.471153Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Update File: src/app/page.tsx
+@@
+-        <section className="space-y-4 rounded-3xl border border-[#e2d8cb] bg-white/70 p-8 shadow-[0_12px_36px_rgba(0,0,0,0.05)]">
++        <section id="sobre-mi" className="space-y-4 rounded-3xl border border-[#e2d8cb] bg-white/70 p-8 shadow-[0_12px_36px_rgba(0,0,0,0.05)]">
+*** End Patch
+2026-01-10T15:56:12.500099Z  INFO ToolCall: shell_command {"command":"cd /home/vibecode/workspace && sed -n '240,300p' src/app/page.tsx"}
+2026-01-10T15:56:22.383288Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Update File: src/app/page.tsx
+@@
+-        <section id="horario" className="space-y-4 rounded-3xl border border-[#e2d8cb] bg-white/70 p-8 shadow-[0_12px_36px_rgba(0,0,0,0.05)]">
++        <section id="sobre-mi" className="space-y-4 rounded-3xl border border-[#e2d8cb] bg-white/70 p-8 shadow-[0_12px_36px_rgba(0,0,0,0.05)]">
+           <p className="text-xs uppercase tracking-[0.3em] text-neutral-600">
+             Sobre mí
+           </p>
+*** End Patch
+2026-01-10T15:56:30.095967Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Update File: src/app/page.tsx
+@@
+         </section>
+ 
++        <section id="horario" className="space-y-4 rounded-3xl border border-[#e2d8cb] bg-white/70 p-8 shadow-[0_12px_36px_rgba(0,0,0,0.05)]">
++          <p className="text-xs uppercase tracking-[0.3em] text-neutral-600">
++            Mi horario semanal
++          </p>
++          <h2 className="text-3xl font-serif tracking-tight text-[#1f1b18]">
++            Mi horario de esta semana
++          </h2>
++          <p className="text-neutral-700">
++            Aquí tienes dónde doy clases esta semana en Barcelona.
++          </p>
++          <WeeklySchedule />
++        </section>
++
+         <section id="clases" className="space-y-10">
+*** End Patch
+2026-01-10T15:56:37.458958Z  INFO ToolCall: shell_command {"command":"cd /home/vibecode/workspace && rg \"latestVideo\" -n src/app/page.tsx"}
+2026-01-10T15:56:43.372281Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Update File: src/app/page.tsx
+@@
+-  const latestVideo = await fetch(`/api/youtube-latest`, { cache: "no-store" })
+-    .then(
+-      (r) =>
+-        r.json() as Promise<{
+-          videoId: string | null;
+-          title: string | null;
+-          published: string | null;
+-        }>
+-    )
+-    .catch(() => ({ videoId: null, title: null, published: null }));
+   return (
+*** End Patch
+2026-01-10T15:58:34.640798Z  INFO spawning ghost snapshot task
+2026-01-10T15:58:34.745171Z  INFO ghost snapshot blocking task finished
+2026-01-10T15:58:34.745198Z  INFO ghost commit captured: e165e5e3a23ebe6d8e34baf749c2d751ff42ea45
+2026-01-10T15:58:34.745204Z  INFO ghost snapshot gate marked ready
+2026-01-10T15:58:41.463821Z  INFO ToolCall: shell_command {"command":"cd /home/vibecode/workspace && rg \"Mi horario\" -n src/app/page.tsx"}
+2026-01-10T15:58:46.889875Z  INFO ToolCall: shell_command {"command":"cd /home/vibecode/workspace && sed -n '290,330p' src/app/page.tsx"}
+2026-01-10T15:58:54.203846Z  INFO ToolCall: apply_patch *** Begin Patch
+*** Update File: src/app/page.tsx
+@@
+-        <section id="horario" className="space-y-4 rounded-3xl border border-[#e2d8cb] bg-white/70 p-8 shadow-[0_12px_36px_rgba(0,0,0,0.05)]">
+-          <p className="text-xs uppercase tracking-[0.3em] text-neutral-600">
+-            Mi horario semanal
+-          </p>
+-          <h2 className="text-3xl font-serif tracking-tight text-[#1f1b18]">
+-            Mi horario de esta semana
+-          </h2>
+-          <p className="text-neutral-700">
+-            Aquí tienes dónde doy clases esta semana en Barcelona.
+-          </p>
+-          <WeeklySchedule />
+-        </section>
+-
+         <section id="clases" className="space-y-10">
+*** End Patch

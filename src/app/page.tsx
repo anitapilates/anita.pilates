@@ -1,9 +1,13 @@
 import Image from "next/image";
+import MobileNav from "../components/MobileNav";
+import WeeklySchedule from "../components/WeeklySchedule";
+import LatestVideo from "../components/LatestVideo";
 
 const navLinks = [
   { label: "Clases", href: "#clases" },
   { label: "Eventos", href: "#eventos" },
   { label: "Centros BCN", href: "#centros" },
+  { label: "Mi horario", href: "#horario" },
   { label: "Contacto", href: "#contacto" },
 ];
 
@@ -71,12 +75,6 @@ const diferenciales = [
   "Formación certificada: Instructora de Mat y Reformer por Balanced Body.",
 ];
 
-const youtubeVideo = {
-  id: "XD40KDc1Id0",
-  title: "Reto 21 días · Sesión completa",
-  url: "https://www.youtube.com/watch?v=XD40KDc1Id0",
-};
-
 const WhatsappFloat = () => (
   <a
     href="https://wa.me/34698288873"
@@ -135,10 +133,10 @@ const InstaBadge = ({
   );
 };
 
-export default function Home() {
+export default async function Home() {
   return (
     <div className="min-h-screen text-[#1f1b18]">
-      <header className="max-w-6xl mx-auto px-6 lg:px-10 py-10 flex items-center justify-between">
+      <header className="max-w-6xl mx-auto px-6 lg:px-10 py-8 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="relative h-12 w-12 overflow-hidden rounded-full border border-[#d8d0c6] shadow-sm bg-white">
             <Image
@@ -155,6 +153,7 @@ export default function Home() {
             <p className="text-sm text-neutral-600">Pilates Reformer · BCN</p>
           </div>
         </div>
+        <MobileNav links={navLinks} />
         <nav className="hidden md:flex items-center gap-6 text-sm uppercase tracking-[0.18em] text-neutral-700">
           {navLinks.map((link) => (
             <a
@@ -165,12 +164,6 @@ export default function Home() {
               {link.label}
             </a>
           ))}
-          <a
-            href="#contacto"
-            className="rounded-full border border-[#c9c0b5] px-4 py-2 text-xs font-semibold hover:bg-[#e6dfd4] transition-colors"
-          >
-            Hablar con Anita
-          </a>
         </nav>
       </header>
 
@@ -262,7 +255,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="space-y-4 rounded-3xl border border-[#e2d8cb] bg-white/70 p-8 shadow-[0_12px_36px_rgba(0,0,0,0.05)]">
+        <section id="sobre-mi" className="space-y-4 rounded-3xl border border-[#e2d8cb] bg-white/70 p-8 shadow-[0_12px_36px_rgba(0,0,0,0.05)]">
           <p className="text-xs uppercase tracking-[0.3em] text-neutral-600">
             Sobre mí
           </p>
@@ -302,6 +295,19 @@ export default function Home() {
               <span aria-hidden>→</span>
             </a>
           </div>
+        </section>
+
+        <section id="horario" className="space-y-4 rounded-3xl border border-[#e2d8cb] bg-white/70 p-8 shadow-[0_12px_36px_rgba(0,0,0,0.05)]">
+          <p className="text-xs uppercase tracking-[0.3em] text-neutral-600">
+            Mi horario semanal
+          </p>
+          <h2 className="text-3xl font-serif tracking-tight text-[#1f1b18]">
+            Mi horario de esta semana
+          </h2>
+          <p className="text-neutral-700">
+            Aquí tienes dónde doy clases esta semana en Barcelona.
+          </p>
+          <WeeklySchedule />
         </section>
 
         <section id="clases" className="space-y-10">
@@ -520,52 +526,31 @@ export default function Home() {
         <section className="rounded-3xl border border-[#e2d8cb] bg-white/70 p-8 lg:p-12 shadow-[0_12px_36px_rgba(0,0,0,0.06)]">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:gap-10">
             <div className="space-y-3 lg:w-1/3">
-            <p className="text-xs uppercase tracking-[0.3em] text-neutral-600">
-              Último vídeo
-            </p>
-            <h3 className="text-2xl font-serif tracking-tight text-[#1f1b18]">
-              Entrena conmigo en casa
-            </h3>
-            <p className="text-neutral-700 leading-relaxed">
-              Sesión completa para activar core, glúteo y control de
-              respiración al estilo Reformer. Dale play o guárdalo para tu
-              próxima práctica.
-            </p>
-            <p className="text-sm text-neutral-600">
-              El canal de YouTube es una puerta de entrada al método. El trabajo
-              más profundo lo hacemos en clases presenciales y sesiones 1:1.
-            </p>
-            <a
-              href={youtubeVideo.url}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex w-fit items-center gap-2 rounded-full border border-[#c9c0b5] bg-white px-5 py-3 text-sm font-semibold text-[#1f1b18] transition-colors hover:bg-[#e6dfd4]"
-            >
-              Ver en YouTube
-              <span aria-hidden>→</span>
-            </a>
+              <p className="text-xs uppercase tracking-[0.3em] text-neutral-600">
+                Último vídeo
+              </p>
+              <h3 className="text-2xl font-serif tracking-tight text-[#1f1b18]">
+                Entrena conmigo en casa
+              </h3>
+              <p className="text-neutral-700 leading-relaxed">
+                Clases de Pilates para entrenar desde casa con control, fuerza y
+                buena técnica. Dale play o guárdalo para tu próxima práctica.
+              </p>
+              <p className="text-sm text-neutral-600">
+                El canal de YouTube es una puerta de entrada al método. El trabajo
+                más profundo lo hacemos en clases presenciales y sesiones 1:1.
+              </p>
+              <a
+                href="https://www.youtube.com/@Anita.pilates"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex w-fit items-center gap-2 rounded-full border border-[#c9c0b5] bg-white px-5 py-3 text-sm font-semibold text-[#1f1b18] transition-colors hover:bg-[#e6dfd4]"
+              >
+                Ver en YouTube
+                <span aria-hidden>→</span>
+              </a>
             </div>
-            <a
-              href={youtubeVideo.url}
-              target="_blank"
-              rel="noreferrer"
-              className="group relative block overflow-hidden rounded-2xl border border-[#e2d8cb] bg-[#f3f0eb]"
-            >
-              <Image
-                src={`https://i.ytimg.com/vi/${youtubeVideo.id}/hqdefault.jpg`}
-                alt={youtubeVideo.title}
-                width={1200}
-                height={675}
-                className="w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
-                unoptimized
-              />
-              <div className="absolute inset-0 bg-black/15 group-hover:bg-black/25 transition-colors" />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="h-14 w-14 rounded-full bg-white/85 text-[#1f1b18] flex items-center justify-center text-lg font-semibold shadow-lg">
-                  ▶
-                </span>
-              </div>
-            </a>
+            <LatestVideo />
           </div>
         </section>
 
