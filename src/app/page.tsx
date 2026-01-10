@@ -45,7 +45,7 @@ const centros = [
   {
     nombre: "VIBRA Studio",
     barrio: "Eixample",
-    direccion: "Carrer de Provenza, 199 · 08036",
+    direccion: "Carrer de Provença, 199 · 08008",
     modalidad: "Pilates Reformer",
   },
   {
@@ -56,7 +56,7 @@ const centros = [
   },
   {
     nombre: "Hotcore Studios",
-    barrio: "Sarrià-Sant Gervasi",
+    barrio: "Sant Gervasi",
     direccion: "Carrer de Balmes, 256 · 08006",
     modalidad: "Pilates Mat · 34º",
   },
