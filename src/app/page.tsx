@@ -40,12 +40,12 @@ const centros = [
     nombre: "Serotonin Studio",
     barrio: "Sant Gervasi",
     direccion: "Carrer de Muntaner, 519 · 08022",
-    modalidad: "Pilates mat",
+    modalidad: "Pilates Mat",
   },
   {
     nombre: "VIBRA Studio",
     barrio: "Eixample",
-    direccion: "C/ Provenza, 199 · 08036",
+    direccion: "Carrer de Provenza, 199 · 08036",
     modalidad: "Pilates Reformer",
   },
   {
@@ -56,15 +56,15 @@ const centros = [
   },
   {
     nombre: "Hotcore Studios",
-    barrio: "Eixample",
+    barrio: "Sarrià-Sant Gervasi",
     direccion: "Carrer de Balmes, 256 · 08006",
-    modalidad: "Pilates mat · 34º",
+    modalidad: "Pilates Mat · 34º",
   },
   {
     nombre: "YOGA 108",
     barrio: "Dreta de l'Eixample",
     direccion: "Carrer de Roger de Llúria, 115 · 08037",
-    modalidad: "Pilates mat",
+    modalidad: "Pilates Mat",
   },
 ];
 
