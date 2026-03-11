@@ -43,9 +43,9 @@ const centros = [
     modalidad: "Pilates Mat",
   },
   {
-    nombre: "VIBRA Studio",
-    barrio: "Eixample",
-    direccion: "Carrer de Provença, 199 · 08008",
+    nombre: "Casa Focco",
+    barrio: "Gràcia",
+    direccion: "Carrer de Vic, 16 · 08006",
     modalidad: "Pilates Reformer",
   },
   {
@@ -59,12 +59,6 @@ const centros = [
     barrio: "Sant Gervasi",
     direccion: "Carrer de Balmes, 256 · 08006",
     modalidad: "Pilates Mat · 34º",
-  },
-  {
-    nombre: "YOGA 108",
-    barrio: "Dreta de l'Eixample",
-    direccion: "Carrer de Roger de Llúria, 115 · 08037",
-    modalidad: "Pilates Mat",
   },
 ];
 
