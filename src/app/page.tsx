@@ -37,15 +37,21 @@ const servicios = [
 
 const centros = [
   {
-    nombre: "Serotonin Studio",
+    nombre: "Serotonin Studio - Muntaner",
     barrio: "Sant Gervasi",
     direccion: "Carrer de Muntaner, 519 · 08022",
     modalidad: "Pilates Mat",
   },
   {
-    nombre: "Casa Focco",
-    barrio: "Gràcia",
-    direccion: "Carrer de Vic, 16 · 08006",
+    nombre: "Serotonin Studio - Tarradellas",
+    barrio: "Les Corts",
+    direccion: "Av. de Josep Tarradellas, 91 · 08029",
+    modalidad: "Pilates Mat",
+  },
+  {
+    nombre: "MOU Pilates - Santaló",
+    barrio: "Sarrià-Sant Gervasi",
+    direccion: "Carrer de Santaló, 15 · 08021",
     modalidad: "Pilates Reformer",
   },
   {
