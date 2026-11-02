@@ -223,12 +223,12 @@ export default function HomePage({ idioma }: { idioma: Idioma }) {
             />
           </div>
           <div className="leading-tight min-w-0">
-            <p className="font-serif text-xl tracking-tight">Anita Pilates</p>
+            <p className="font-serif text-xl tracking-tight whitespace-nowrap">Anita Pilates</p>
             <p className="text-sm text-neutral-600">{t.cabecera.subtitulo}</p>
           </div>
         </div>
-        <div className="flex items-center gap-3 lg:gap-6 shrink-0">
-          <nav className="hidden lg:flex items-center gap-6 text-sm uppercase tracking-[0.18em] text-neutral-700">
+        <div className="flex items-center gap-3 xl:gap-6 shrink-0">
+          <nav className="hidden xl:flex items-center gap-5 text-sm uppercase tracking-[0.14em] text-neutral-700">
             {navLinks.map((link) => (
               <a
                 key={link.href}
@@ -410,60 +410,95 @@ export default function HomePage({ idioma }: { idioma: Idioma }) {
         {/* ── TESTIMONIOS (la lista está en src/content/testimonios.ts) ── */}
         <Testimonios idioma={idioma} />
 
-        {/* ── EVENTOS ── */}
-        <section
-          id="eventos"
-          className="scroll-mt-6 rounded-3xl border border-[#e2d8cb] bg-white/70 p-6 sm:p-8 lg:p-12 shadow-[0_15px_45px_rgba(53,45,38,0.08)] grid lg:grid-cols-[1.2fr_1fr] gap-10 items-center"
-        >
-          <div className="space-y-4">
-            <p className="text-xs uppercase tracking-[0.3em] text-neutral-600">
-              {t.eventos.antetitulo}
-            </p>
-            <h2 className="text-3xl font-serif tracking-tight text-[#1f1b18]">
-              {t.eventos.titulo}
+        {/* ── EVENTOS Y GRUPOS ── */}
+        <section id="eventos" className="scroll-mt-6 space-y-6">
+          <div className="flex items-center gap-3">
+            <div className="h-px w-10 bg-[#c9c0b5]" />
+            <h2 className="text-xs uppercase tracking-[0.3em] text-neutral-600">
+              {t.grupos.seccion}
             </h2>
-            <p className="text-neutral-700 leading-relaxed">{t.eventos.texto}</p>
-            <div className="rounded-2xl border border-[#e2d8cb] bg-[#f3f0eb] px-5 py-4 space-y-1">
-              {evento ? (
-                <>
-                  <p className="text-xs uppercase tracking-[0.2em] text-neutral-700">
-                    {t.eventos.proximo}
-                  </p>
-                  <p className="text-lg font-semibold">{evento.fecha}</p>
-                  {evento.detalles && (
-                    <p className="text-neutral-700">{evento.detalles}</p>
-                  )}
-                  {evento.tema && (
-                    <p className="text-neutral-700">{evento.tema}</p>
-                  )}
-                </>
-              ) : (
-                <p className="font-semibold">{t.eventos.sinFecha}</p>
-              )}
-            </div>
-            <p className="text-sm text-neutral-600">{t.eventos.plazas}</p>
-            <a
-              href={enlaceWhatsapp(
-                evento ? t.eventos.mensajeConFecha : t.eventos.mensajeSinFecha,
-              )}
-              target="_blank"
-              rel="noreferrer"
-              className={btnClaro}
-            >
-              {evento ? t.eventos.botonConFecha : t.eventos.botonSinFecha}
-              <span aria-hidden>→</span>
-            </a>
           </div>
-          <div className="relative">
-            <div className="absolute inset-0 blur-2xl bg-[radial-gradient(circle_at_70%_40%,#e6dfd4,transparent_60%)]" />
-            <div className="relative rounded-3xl overflow-hidden border border-[#e2d8cb]">
-              <Image
-                src="/anita-session.jpg"
-                alt={t.eventos.fotoAlt}
-                width={900}
-                height={900}
-                className="h-full w-full object-cover"
-              />
+
+          <div className="grid lg:grid-cols-2 gap-6 items-stretch">
+            {/* Tarjeta: eventos */}
+            <div className="rounded-3xl border border-[#e2d8cb] bg-white/70 p-6 sm:p-8 lg:p-10 shadow-[0_15px_45px_rgba(53,45,38,0.08)] flex flex-col gap-4">
+              <p className="text-xs uppercase tracking-[0.3em] text-neutral-600">
+                {t.eventos.antetitulo}
+              </p>
+              <h3 className="text-3xl font-serif tracking-tight text-[#1f1b18]">
+                {t.eventos.titulo}
+              </h3>
+              <p className="text-neutral-700 leading-relaxed">{t.eventos.texto}</p>
+              <div className="rounded-2xl border border-[#e2d8cb] bg-[#f3f0eb] px-5 py-4 space-y-1">
+                {evento ? (
+                  <>
+                    <p className="text-xs uppercase tracking-[0.2em] text-neutral-700">
+                      {t.eventos.proximo}
+                    </p>
+                    <p className="text-lg font-semibold">{evento.fecha}</p>
+                    {evento.detalles && (
+                      <p className="text-neutral-700">{evento.detalles}</p>
+                    )}
+                    {evento.tema && (
+                      <p className="text-neutral-700">{evento.tema}</p>
+                    )}
+                  </>
+                ) : (
+                  <p className="font-semibold">{t.eventos.sinFecha}</p>
+                )}
+              </div>
+              <p className="text-sm text-neutral-600">{t.eventos.plazas}</p>
+              <div className="mt-auto pt-1">
+                <a
+                  href={enlaceWhatsapp(
+                    evento ? t.eventos.mensajeConFecha : t.eventos.mensajeSinFecha,
+                  )}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={btnClaro}
+                >
+                  {evento ? t.eventos.botonConFecha : t.eventos.botonSinFecha}
+                  <span aria-hidden>→</span>
+                </a>
+              </div>
+            </div>
+
+            {/* Tarjeta: empresas, residencias y grupos */}
+            <div className="rounded-3xl border border-[#e2d8cb] bg-white/70 p-6 sm:p-8 lg:p-10 shadow-[0_15px_45px_rgba(53,45,38,0.08)] flex flex-col gap-4">
+              <div className="rounded-2xl overflow-hidden border border-[#e2d8cb] aspect-[16/9]">
+                <Image
+                  src="/anita-session.jpg"
+                  alt={t.eventos.fotoAlt}
+                  width={900}
+                  height={900}
+                  className="h-full w-full object-cover"
+                />
+              </div>
+              <p className="text-xs uppercase tracking-[0.3em] text-neutral-600">
+                {t.grupos.antetitulo}
+              </p>
+              <h3 className="text-3xl font-serif tracking-tight text-[#1f1b18]">
+                {t.grupos.titulo}
+              </h3>
+              <p className="text-neutral-700 leading-relaxed">{t.grupos.texto}</p>
+              <div className="mt-auto pt-1 flex flex-wrap gap-3">
+                <a
+                  href={enlaceWhatsapp(t.grupos.mensajeWhatsapp)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={btnClaro}
+                >
+                  {t.grupos.botonWhatsapp}
+                  <span aria-hidden>→</span>
+                </a>
+                <a
+                  href={`mailto:anita.pilatess@gmail.com?subject=${encodeURIComponent(t.grupos.asuntoEmail)}`}
+                  className={btnClaro}
+                >
+                  {t.grupos.botonEmail}
+                  <span aria-hidden>→</span>
+                </a>
+              </div>
             </div>
           </div>
         </section>

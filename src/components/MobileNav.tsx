@@ -40,7 +40,7 @@ export default function MobileNav({
         aria-expanded={open}
         aria-controls="mobile-nav-panel"
         onClick={() => setOpen((v) => !v)}
-        className="lg:hidden flex h-10 w-10 items-center justify-center rounded-full border border-[#d8d0c6] bg-white text-[#1f1b18]"
+        className="xl:hidden flex h-10 w-10 items-center justify-center rounded-full border border-[#d8d0c6] bg-white text-[#1f1b18]"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -67,7 +67,7 @@ export default function MobileNav({
         id="mobile-nav-panel"
         className={`fixed z-50 right-4 left-4 top-20 rounded-3xl border border-[#e2d8cb] bg-white/90 p-5 shadow-[0_16px_40px_rgba(0,0,0,0.12)] transition-all duration-200 ${
           open ? "opacity-100 translate-y-0" : "pointer-events-none opacity-0 -translate-y-2"
-        } lg:hidden`}
+        } xl:hidden`}
       >
         <div className="flex flex-col gap-3">
           {links.map((link) => (
