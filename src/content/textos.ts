@@ -189,7 +189,7 @@ const es = {
       },
       {
         pregunta: "¿Cuánto dura una sesión?",
-        respuesta: "45 minutos.",
+        respuesta: "{minutos} minutos.",
       },
       {
         pregunta: "¿Las sesiones son presenciales u online?",
@@ -230,6 +230,16 @@ const es = {
       "Detalle de alineación en reformer",
       "Anita guiando a sus alumnas",
     ],
+  },
+
+  testimonios: {
+    antetitulo: "Testimonios",
+    titulo: "Lo que dicen mis alumnas",
+    habitual: "Alumna habitual",
+    primera: "Primera clase",
+    anterior: "Testimonio anterior",
+    siguiente: "Siguiente testimonio",
+    carrusel: "Testimonios de alumnas",
   },
 
   whatsappFlotante: {
@@ -423,7 +433,7 @@ const en: Textos = {
       },
       {
         pregunta: "How long is a session?",
-        respuesta: "45 minutes.",
+        respuesta: "{minutos} minutes.",
       },
       {
         pregunta: "Are sessions in person or online?",
@@ -464,6 +474,16 @@ const en: Textos = {
       "Alignment detail on the reformer",
       "Anita guiding her students",
     ],
+  },
+
+  testimonios: {
+    antetitulo: "Testimonials",
+    titulo: "What my students say",
+    habitual: "Regular student",
+    primera: "First class",
+    anterior: "Previous testimonial",
+    siguiente: "Next testimonial",
+    carrusel: "Student testimonials",
   },
 
   whatsappFlotante: {
