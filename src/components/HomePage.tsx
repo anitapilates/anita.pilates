@@ -2,6 +2,7 @@ import Image from "next/image";
 import MobileNav from "./MobileNav";
 import WeeklySchedule from "./WeeklySchedule";
 import LatestVideo from "./LatestVideo";
+import Testimonios from "./Testimonios";
 import { textos, type Idioma } from "../content/textos";
 import { tarifas, DURACION_SESION_MINUTOS } from "../content/tarifas";
 import { proximoEvento } from "../content/evento";
@@ -181,33 +182,17 @@ export default function HomePage({ idioma }: { idioma: Idioma }) {
     { label: t.nav.contacto, href: "#contacto" },
   ];
 
+  // Líneas de precio de una sesión individual (el bono solo si tiene precio)
+  const lineasIndividual = (tarifa: { sesion: number; bono5: number | null }) => [
+    { precio: precio(tarifa.sesion, idioma), nota: t.sesiones.porSesion },
+    ...(tarifa.bono5 !== null
+      ? [{ precio: precio(tarifa.bono5, idioma), nota: t.sesiones.bono5 }]
+      : []),
+  ];
+
   const tarjetasPrecio = [
-    {
-      ...t.sesiones.tarjetas.reformer,
-      lineas: [
-        {
-          precio: precio(tarifas.reformer1a1.sesion, idioma),
-          nota: t.sesiones.porSesion,
-        },
-        {
-          precio: precio(tarifas.reformer1a1.bono5, idioma),
-          nota: t.sesiones.bono5,
-        },
-      ],
-    },
-    {
-      ...t.sesiones.tarjetas.mat,
-      lineas: [
-        {
-          precio: precio(tarifas.mat1a1.sesion, idioma),
-          nota: t.sesiones.porSesion,
-        },
-        {
-          precio: precio(tarifas.mat1a1.bono5, idioma),
-          nota: t.sesiones.bono5,
-        },
-      ],
-    },
+    { ...t.sesiones.tarjetas.reformer, lineas: lineasIndividual(tarifas.reformer1a1) },
+    { ...t.sesiones.tarjetas.mat, lineas: lineasIndividual(tarifas.mat1a1) },
     {
       ...t.sesiones.tarjetas.duo,
       lineas: [
@@ -421,6 +406,9 @@ export default function HomePage({ idioma }: { idioma: Idioma }) {
             </a>
           </div>
         </section>
+
+        {/* ── TESTIMONIOS (la lista está en src/content/testimonios.ts) ── */}
+        <Testimonios idioma={idioma} />
 
         {/* ── EVENTOS ── */}
         <section
@@ -656,7 +644,10 @@ export default function HomePage({ idioma }: { idioma: Idioma }) {
                   </span>
                 </summary>
                 <p className="px-5 pb-5 text-neutral-700 leading-relaxed">
-                  {item.respuesta}
+                  {item.respuesta.replace(
+                    "{minutos}",
+                    String(DURACION_SESION_MINUTOS),
+                  )}
                 </p>
               </details>
             ))}
