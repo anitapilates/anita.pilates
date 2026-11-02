@@ -6,7 +6,7 @@ import { testimonios } from "../content/testimonios";
 import { textos, type Idioma } from "../content/textos";
 
 /** Segundos que espera el carrusel antes de pasar solo a la siguiente tarjeta. */
-const SEGUNDOS_PASO_AUTOMATICO = 5;
+const SEGUNDOS_PASO_AUTOMATICO = 10;
 
 const Flecha = ({ direccion }: { direccion: "izq" | "der" }) => (
   <svg
@@ -63,7 +63,7 @@ export default function Testimonios({ idioma }: { idioma: Idioma }) {
     ultimaInteraccion.current = Date.now();
   };
 
-  // Paso automático: avanza cada 5 s, salvo si la persona está usando
+  // Paso automático: avanza cada 10 s, salvo si la persona está usando
   // el carrusel, tiene el ratón encima o prefiere evitar animaciones.
   useEffect(() => {
     const sinAnimaciones = window.matchMedia(
