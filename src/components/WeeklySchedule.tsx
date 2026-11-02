@@ -2,6 +2,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { textos, type Idioma } from "../content/textos";
 
 type ClassEntry = {
   DIA: string;
@@ -16,7 +17,19 @@ type DaySchedule = {
   classes: ClassEntry[];
 };
 
-export default function WeeklySchedule() {
+// Traduce el nombre del día (que viene en castellano desde la hoja)
+// al idioma de la página. Si no lo reconoce, lo deja tal cual.
+function nombreDia(dia: string, idioma: Idioma) {
+  const clave = dia
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+  return textos[idioma].dias[clave] ?? dia;
+}
+
+export default function WeeklySchedule({ idioma = "es" }: { idioma?: Idioma }) {
+  const t = textos[idioma].horario;
   const [days, setDays] = useState<DaySchedule[] | null>(null);
 
   useEffect(() => {
@@ -39,7 +52,7 @@ export default function WeeklySchedule() {
   if (days === null) {
     return (
       <div className="rounded-2xl border border-[#e2d8cb] bg-white/70 px-4 py-5 text-sm text-neutral-700">
-        Cargando horario...
+        {t.cargando}
       </div>
     );
   }
@@ -47,7 +60,7 @@ export default function WeeklySchedule() {
   if (!days.length) {
     return (
       <div className="rounded-2xl border border-[#e2d8cb] bg-white/70 px-4 py-5 text-sm text-neutral-700">
-        Horario no disponible ahora.
+        {t.noDisponible}
       </div>
     );
   }
@@ -61,11 +74,12 @@ export default function WeeklySchedule() {
         >
           <div className="flex items-center justify-between">
             <p className="text-sm uppercase tracking-[0.22em] text-neutral-600">
-              {day.day}
+              {nombreDia(day.day, idioma)}
             </p>
             <span className="h-px flex-1 mx-3 bg-[#e2d8cb]" />
             <span className="text-xs text-neutral-500">
-              {day.classes.length} clase{day.classes.length > 1 ? "s" : ""}
+              {day.classes.length}{" "}
+              {day.classes.length > 1 ? t.clases : t.clase}
             </span>
           </div>
           <div className="space-y-3">

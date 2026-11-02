@@ -2,6 +2,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { textos, type Idioma } from "../content/textos";
 
 type VideoData = {
   videoId: string | null;
@@ -10,7 +11,8 @@ type VideoData = {
   debug?: any;
 };
 
-export default function LatestVideo() {
+export default function LatestVideo({ idioma = "es" }: { idioma?: Idioma }) {
+  const t = textos[idioma].video;
   const [video, setVideo] = useState<VideoData | null>(null);
 
   useEffect(() => {
@@ -33,7 +35,7 @@ export default function LatestVideo() {
   if (!video) {
     return (
       <div className="rounded-2xl border border-[#e2d8cb] bg-white/80 p-6 text-sm text-neutral-700">
-        Cargando vídeo...
+        {t.cargando}
       </div>
     );
   }
@@ -41,7 +43,7 @@ export default function LatestVideo() {
   if (!video.videoId) {
     return (
       <div className="rounded-2xl border border-[#e2d8cb] bg-white/80 p-6 text-sm text-neutral-700">
-        Nuevo vídeo muy pronto.
+        {t.proximamente}
       </div>
     );
   }
@@ -50,7 +52,7 @@ export default function LatestVideo() {
     <div className="relative w-full overflow-hidden rounded-2xl border border-[#e2d8cb] bg-[#f3f0eb] shadow-[0_12px_30px_rgba(0,0,0,0.08)]">
       <div className="relative pb-[56.25%]">
         <iframe
-          title={video.title ?? "Último vídeo de Anita"}
+          title={video.title ?? t.tituloPorDefecto}
           src={`https://www.youtube.com/embed/${video.videoId}`}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
