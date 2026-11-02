@@ -17,7 +17,7 @@ const es = {
 
   nav: {
     sesiones: "Sesiones privadas",
-    eventos: "Eventos",
+    eventos: "Eventos y grupos",
     centros: "Centros BCN",
     horario: "Mi horario",
     faq: "FAQ",
@@ -104,11 +104,24 @@ const es = {
     mensajeDudas: "Hola Anita, me gustaría saber más sobre las sesiones privadas",
   },
 
+  grupos: {
+    seccion: "Eventos y grupos",
+    antetitulo: "Empresas · Residencias · Grupos",
+    titulo: "Para empresas, residencias y grupos",
+    texto:
+      "Organizo clases de pilates para equipos de trabajo, residencias de estudiantes y grupos privados: una clase puntual, varias sesiones o una actividad dentro de un evento. Lo adaptamos al espacio, al nivel del grupo y a vuestro calendario.",
+    botonWhatsapp: "Escríbeme por WhatsApp",
+    mensajeWhatsapp:
+      "Hola Anita, me gustaría información sobre clases de pilates para un grupo (empresa, residencia...)",
+    botonEmail: "Escríbeme un email",
+    asuntoEmail: "Pilates para grupos",
+  },
+
   eventos: {
     antetitulo: "Eventos · Mat y Reformer",
     titulo: "Encuentros para entrenar en grupo y subir un nivel en tu práctica",
     texto:
-      "Encuentros especiales para entrenar en grupo y subir un nivel más en la práctica. Trabajamos Pilates Mat y Pilates Reformer con el mismo cuidado y precisión: control, respiración, core y fuerza global. Cada evento es una experiencia puntual, pensada para profundizar en el método y compartir el movimiento.",
+      "Un plan diferente para salir de la rutina y conocer a otras personas a las que también les encanta el pilates. Trabajamos Pilates Mat y Pilates Reformer con el mismo cuidado y precisión: control, respiración, core y fuerza global. Cada evento es una experiencia puntual, pensada para profundizar en el método y compartir el movimiento.",
     proximo: "Próximo evento",
     sinFecha: "Próximo evento: escríbeme por WhatsApp y te aviso",
     plazas: "Plazas limitadas. Te cuento todos los detalles por WhatsApp.",
@@ -207,6 +220,11 @@ const es = {
           "Sí. Las sesiones dúo son para dos personas y salen más económicas por persona.",
       },
       {
+        pregunta: "¿Das clases para empresas o residencias?",
+        respuesta:
+          "Sí. Organizo clases para equipos, residencias de estudiantes y grupos privados. Escríbeme y te preparo una propuesta.",
+      },
+      {
         pregunta: "¿Cuánto cuesta?",
         respuesta:
           "Tienes todas las tarifas en la sección de sesiones privadas. Si tienes dudas, escríbeme por WhatsApp.",
@@ -222,7 +240,7 @@ const es = {
     titulo:
       "¿Cómo quieres entrenar? Escríbeme y vemos qué opción encaja mejor contigo.",
     texto:
-      "Cuéntame si te interesa una sesión privada (1:1 o dúo), un evento o las clases en centros. Te respondo yo, sin reservas automáticas: ajustamos la agenda juntas.",
+      "Cuéntame si te interesa una sesión privada (1:1 o dúo), un evento, las clases en centros o una actividad para tu empresa o residencia. Te respondo yo, sin reservas automáticas: ajustamos la agenda juntas.",
     boton: "Escríbeme por WhatsApp",
     mensaje: "Hola Anita, me gustaría entrenar contigo",
     fotos: [
@@ -261,7 +279,7 @@ const en: Textos = {
 
   nav: {
     sesiones: "Private sessions",
-    eventos: "Events",
+    eventos: "Events & groups",
     centros: "Studios",
     horario: "Schedule",
     faq: "FAQ",
@@ -348,11 +366,24 @@ const en: Textos = {
     mensajeDudas: "Hi Anita, I'd love to know more about your private sessions",
   },
 
+  grupos: {
+    seccion: "Events & groups",
+    antetitulo: "Companies · Residences · Groups",
+    titulo: "For companies, student residences and groups",
+    texto:
+      "I organise Pilates classes for work teams, student residences and private groups: a one-off class, a series of sessions or an activity as part of an event. We'll tailor it to your space, the group's level and your schedule.",
+    botonWhatsapp: "Message me on WhatsApp",
+    mensajeWhatsapp:
+      "Hi Anita, I'd like some information about Pilates classes for a group (company, student residence...)",
+    botonEmail: "Send me an email",
+    asuntoEmail: "Pilates for groups",
+  },
+
   eventos: {
     antetitulo: "Events · Mat & Reformer",
     titulo: "Group sessions to train together and take your practice up a level",
     texto:
-      "Special get-togethers to train as a group and take your practice one step further. We work on Mat and Reformer Pilates with the same care and precision: control, breath, core and full-body strength. Each event is a one-off experience, designed to go deeper into the method and share the joy of movement.",
+      "A different plan to break your routine and meet other people who love Pilates as much as you do. We work on Mat and Reformer Pilates with the same care and precision: control, breath, core and full-body strength. Each event is a one-off experience, designed to go deeper into the method and share the joy of movement.",
     proximo: "Next event",
     sinFecha: "Next event: message me on WhatsApp and I'll let you know",
     plazas: "Limited spots. I'll send you all the details on WhatsApp.",
@@ -451,6 +482,11 @@ const en: Textos = {
           "Yes. Duo sessions are for two people and work out cheaper per person.",
       },
       {
+        pregunta: "Do you teach classes for companies or student residences?",
+        respuesta:
+          "Yes. I organise classes for teams, student residences and private groups. Message me and I'll put together a proposal for you.",
+      },
+      {
         pregunta: "How much does it cost?",
         respuesta:
           "You'll find all the rates in the private sessions section. Any questions, just message me on WhatsApp.",
@@ -466,7 +502,7 @@ const en: Textos = {
     titulo:
       "How would you like to train? Message me and we'll find the option that suits you best.",
     texto:
-      "Tell me if you're interested in a private session (1:1 or duo), an event or studio classes. I reply personally, with no automated booking: we'll plan your schedule together.",
+      "Tell me if you're interested in a private session (1:1 or duo), an event, studio classes or an activity for your company or student residence. I reply personally, with no automated booking: we'll plan your schedule together.",
     boton: "Message me on WhatsApp",
     mensaje: "Hi Anita, I'd love to train with you",
     fotos: [
