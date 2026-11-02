@@ -5,7 +5,13 @@ import { useEffect, useState } from "react";
 
 type Link = { label: string; href: string };
 
-export default function MobileNav({ links }: { links: Link[] }) {
+export default function MobileNav({
+  links,
+  ariaLabel = "Abrir menú",
+}: {
+  links: Link[];
+  ariaLabel?: string;
+}) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -30,11 +36,11 @@ export default function MobileNav({ links }: { links: Link[] }) {
   return (
     <>
       <button
-        aria-label="Abrir menú"
+        aria-label={ariaLabel}
         aria-expanded={open}
         aria-controls="mobile-nav-panel"
         onClick={() => setOpen((v) => !v)}
-        className="md:hidden flex h-10 w-10 items-center justify-center rounded-full border border-[#d8d0c6] bg-white text-[#1f1b18]"
+        className="lg:hidden flex h-10 w-10 items-center justify-center rounded-full border border-[#d8d0c6] bg-white text-[#1f1b18]"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -61,7 +67,7 @@ export default function MobileNav({ links }: { links: Link[] }) {
         id="mobile-nav-panel"
         className={`fixed z-50 right-4 left-4 top-20 rounded-3xl border border-[#e2d8cb] bg-white/90 p-5 shadow-[0_16px_40px_rgba(0,0,0,0.12)] transition-all duration-200 ${
           open ? "opacity-100 translate-y-0" : "pointer-events-none opacity-0 -translate-y-2"
-        } md:hidden`}
+        } lg:hidden`}
       >
         <div className="flex flex-col gap-3">
           {links.map((link) => (
