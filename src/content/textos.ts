@@ -246,7 +246,7 @@ const en: Textos = {
   seo: {
     titulo: "Private Pilates in Barcelona | Reformer & Mat · Anita Pilates",
     descripcion:
-      "Private Reformer and Mat Pilates sessions in Barcelona, 1:1 and duo, with Anita, a Balanced Body certified instructor. Pilates events and studio classes. Message me on WhatsApp.",
+      "Private Reformer and Mat Pilates sessions in Barcelona, in English or Spanish, 1:1 and duo, with Anita, a Balanced Body certified instructor. Pilates events and studio classes. Message me on WhatsApp.",
   },
 
   nav: {
@@ -294,7 +294,7 @@ const en: Textos = {
     mensajePrincipal: "Hi Anita, I'd love to know more about your private sessions",
     botonTarifas: "See sessions & rates",
     botonEvento: "Next event",
-    etiquetas: ["Balanced Body certified", "Mat & Reformer"],
+    etiquetas: ["Balanced Body certified", "Mat & Reformer", "English & Spanish"],
     nota:
       "No rush and no automated booking: you message me, I reply personally and we plan it together.",
     fotoAlt: "Anita introducing herself",
@@ -309,7 +309,7 @@ const en: Textos = {
     intro:
       "We work at your pace and around your goals: getting stronger, improving your posture, staying consistent or simply feeling better in your body. You choose Mat or Reformer, and I adapt every exercise to your level, with close guidance and personal follow-up.",
     detalle:
-      "{minutos}-minute sessions · in person in Barcelona (online too, if that works better for you).",
+      "{minutos}-minute sessions in English or Spanish · in person in Barcelona (online too, if that works better for you).",
     porSesion: "per session",
     bono5: "5-session pack",
     porPersona: "/person",
