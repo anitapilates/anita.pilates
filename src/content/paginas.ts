@@ -304,7 +304,7 @@ export const paginas: Record<PaginaServicio, Config> = {
         {
           titulo: "Voy a vuestro espacio",
           texto:
-            "Doy la clase en vuestra oficina, residencia o el espacio que elijáis. El material lo ponéis vosotros, aunque todo se puede hablar.",
+            "Doy la clase en vuestra oficina, residencia o el espacio que elijáis. Si no tenéis material, escríbeme y buscamos una solución.",
         },
       ],
       precioTitulo: "Precio",
@@ -324,7 +324,7 @@ export const paginas: Record<PaginaServicio, Config> = {
         {
           pregunta: "¿Hace falta material?",
           respuesta:
-            "Sí, el material (por ejemplo, las esterillas) lo pone la empresa o el grupo. Si no lo tenéis, escríbeme y buscamos una solución: todo se puede apañar.",
+            "Sí, el material (por ejemplo, las esterillas) lo pone la empresa o el grupo. Si no lo tenéis, escríbeme y buscamos una solución.",
         },
         {
           pregunta: "¿Hace falta experiencia previa?",
@@ -388,7 +388,7 @@ export const paginas: Record<PaginaServicio, Config> = {
         {
           titulo: "I come to you",
           texto:
-            "I teach the class at your office, residence or wherever you choose. You provide the equipment, although everything is open to discussion.",
+            "I teach the class at your office, residence or wherever you choose. If you don't have any equipment, message me and we'll find a solution.",
         },
       ],
       precioTitulo: "Pricing",
@@ -407,7 +407,7 @@ export const paginas: Record<PaginaServicio, Config> = {
         {
           pregunta: "Do we need equipment?",
           respuesta:
-            "Yes, the company or group provides the equipment (mats, for example). If you don't have any, message me and we'll find a solution: everything can be worked out.",
+            "Yes, the company or group provides the equipment (mats, for example). If you don't have any, message me and we'll find a solution.",
         },
         {
           pregunta: "Do people need previous experience?",
