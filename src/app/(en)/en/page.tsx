@@ -1,7 +1,7 @@
 import HomePage from "../../../components/HomePage";
 import { metadatos } from "../../../content/seo";
 
-export const metadata = metadatos("en");
+export const metadata = metadatos("en", "inicio");
 
 // Se regenera cada día para que un evento pasado deje de mostrarse solo.
 export const revalidate = 86400;

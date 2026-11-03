@@ -10,20 +10,23 @@ export type Idioma = "es" | "en";
 const es = {
   seo: {
     titulo:
-      "Clases privadas de Pilates en Barcelona | Reformer y Mat · Anita Pilates",
+      "Anita Pilates | Instructora de Pilates Reformer y Mat en Barcelona",
     descripcion:
       "Sesiones privadas de Pilates Reformer y Mat en Barcelona, 1:1 y dúo, con Anita, instructora certificada por Balanced Body. Eventos de pilates y clases en estudios. Escríbeme por WhatsApp.",
   },
 
   nav: {
     sesiones: "Sesiones privadas",
-    eventos: "Eventos y grupos",
+    eventos: "Eventos",
+    empresas: "Empresas y grupos",
     centros: "Centros BCN",
     horario: "Mi horario",
     faq: "FAQ",
     contacto: "Contacto",
     abrirMenu: "Abrir menú",
     idioma: "Idioma",
+    verMas: "Ver más",
+    relacionadas: "También te puede interesar",
   },
 
   cabecera: {
@@ -191,40 +194,48 @@ const es = {
     titulo: "Preguntas frecuentes",
     preguntas: [
       {
+        id: "experiencia",
         pregunta: "¿Necesito experiencia previa?",
         respuesta:
           "No. Adapto cada sesión a tu nivel, tanto si empiezas de cero como si ya practicas.",
       },
       {
+        id: "llevar",
         pregunta: "¿Qué tengo que llevar?",
         respuesta:
           "Nada, solo ropa cómoda: las sesiones son en una sala equipada con reformer y mat. Si haces reformer, trae calcetines antideslizantes.",
       },
       {
+        id: "duracion",
         pregunta: "¿Cuánto dura una sesión?",
         respuesta: "{minutos} minutos.",
       },
       {
+        id: "presencial",
         pregunta: "¿Las sesiones son presenciales u online?",
         respuesta:
           "Principalmente presenciales, en Barcelona. Si lo necesitas, también podemos hacerla online.",
       },
       {
+        id: "matReformer",
         pregunta: "¿Mat o Reformer?",
         respuesta:
           "Puedes elegir, tanto en las sesiones como en los eventos. Si no sabes cuál te va mejor, escríbeme y lo vemos.",
       },
       {
+        id: "acompanante",
         pregunta: "¿Puedo venir con otra persona?",
         respuesta:
           "Sí. Las sesiones dúo son para dos personas y salen más económicas por persona.",
       },
       {
+        id: "empresas",
         pregunta: "¿Das clases para empresas o residencias?",
         respuesta:
           "Sí. Organizo clases para equipos, residencias de estudiantes y grupos privados. Escríbeme y te preparo una propuesta.",
       },
       {
+        id: "precio",
         pregunta: "¿Cuánto cuesta?",
         respuesta:
           "Tienes todas las tarifas en la sección de sesiones privadas. Si tienes dudas, escríbeme por WhatsApp.",
@@ -272,20 +283,23 @@ export type Textos = typeof es;
 
 const en: Textos = {
   seo: {
-    titulo: "Private Pilates in Barcelona | Reformer & Mat · Anita Pilates",
+    titulo: "Anita Pilates | Reformer & Mat Pilates Instructor in Barcelona",
     descripcion:
       "Private Reformer and Mat Pilates sessions in Barcelona, in English or Spanish, 1:1 and duo, with Anita, a Balanced Body certified instructor. Pilates events and studio classes. Message me on WhatsApp.",
   },
 
   nav: {
     sesiones: "Private sessions",
-    eventos: "Events & groups",
+    eventos: "Events",
+    empresas: "Companies & groups",
     centros: "Studios",
     horario: "Schedule",
     faq: "FAQ",
     contacto: "Contact",
     abrirMenu: "Open menu",
     idioma: "Language",
+    verMas: "See more",
+    relacionadas: "You might also like",
   },
 
   cabecera: {
@@ -453,40 +467,48 @@ const en: Textos = {
     titulo: "Frequently asked questions",
     preguntas: [
       {
+        id: "experiencia",
         pregunta: "Do I need any previous experience?",
         respuesta:
           "No. I adapt every session to your level, whether you're starting from scratch or already practise.",
       },
       {
+        id: "llevar",
         pregunta: "What should I bring?",
         respuesta:
           "Nothing, just comfortable clothes: sessions take place in a studio equipped with a reformer and mats. If you're doing Reformer, bring grip socks.",
       },
       {
+        id: "duracion",
         pregunta: "How long is a session?",
         respuesta: "{minutos} minutes.",
       },
       {
+        id: "presencial",
         pregunta: "Are sessions in person or online?",
         respuesta:
           "Mostly in person, in Barcelona. If you need to, we can also do it online.",
       },
       {
+        id: "matReformer",
         pregunta: "Mat or Reformer?",
         respuesta:
           "It's your choice, both for sessions and events. If you're not sure which suits you best, message me and we'll figure it out.",
       },
       {
+        id: "acompanante",
         pregunta: "Can I come with someone else?",
         respuesta:
           "Yes. Duo sessions are for two people and work out cheaper per person.",
       },
       {
+        id: "empresas",
         pregunta: "Do you teach classes for companies or student residences?",
         respuesta:
           "Yes. I organise classes for teams, student residences and private groups. Message me and I'll put together a proposal for you.",
       },
       {
+        id: "precio",
         pregunta: "How much does it cost?",
         respuesta:
           "You'll find all the rates in the private sessions section. Any questions, just message me on WhatsApp.",

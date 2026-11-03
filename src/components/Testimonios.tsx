@@ -50,8 +50,20 @@ function moverPista(el: HTMLDivElement | null, sentido: 1 | -1) {
   }
 }
 
-export default function Testimonios({ idioma }: { idioma: Idioma }) {
+export default function Testimonios({
+  idioma,
+  nombres,
+}: {
+  idioma: Idioma;
+  /** Si se indica, solo se muestran los testimonios de estas personas. */
+  nombres?: string[];
+}) {
   const t = textos[idioma].testimonios;
+  const lista = nombres
+    ? testimonios.filter((item) => nombres.includes(item.nombre))
+    : testimonios;
+  // Con 3 o menos, en ordenador caben todas y las flechas sobran.
+  const ocultarFlechasOrdenador = lista.length <= 3 ? " lg:hidden" : "";
   const pista = useRef<HTMLDivElement>(null);
   const ultimaInteraccion = useRef(0);
   const ultimoPaso = useRef(0);
@@ -117,7 +129,7 @@ export default function Testimonios({ idioma }: { idioma: Idioma }) {
             marcarInteraccion();
             mover(-1);
           }}
-          className={`${btnFlecha} -left-5`}
+          className={`${btnFlecha} -left-5${ocultarFlechasOrdenador}`}
         >
           <Flecha direccion="izq" />
         </button>
@@ -130,12 +142,12 @@ export default function Testimonios({ idioma }: { idioma: Idioma }) {
           onFocus={marcarInteraccion}
           className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:gap-6"
         >
-          {testimonios.map((item, i) => (
+          {lista.map((item, i) => (
             <figure
               key={`${item.nombre}-${i}`}
               role="group"
               aria-roledescription="slide"
-              aria-label={`${i + 1} / ${testimonios.length}`}
+              aria-label={`${i + 1} / ${lista.length}`}
               className="flex w-[85%] shrink-0 snap-start flex-col gap-5 rounded-2xl border border-[#e2d8cb] bg-white/80 p-6 shadow-[0_10px_30px_rgba(0,0,0,0.04)] sm:w-[60%] md:w-[45%] lg:w-[30%]"
             >
               <span
@@ -174,7 +186,7 @@ export default function Testimonios({ idioma }: { idioma: Idioma }) {
             marcarInteraccion();
             mover(1);
           }}
-          className={`${btnFlecha} -right-5`}
+          className={`${btnFlecha} -right-5${ocultarFlechasOrdenador}`}
         >
           <Flecha direccion="der" />
         </button>
