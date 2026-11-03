@@ -65,7 +65,7 @@ export default function MobileNav({
 
       <div
         id="mobile-nav-panel"
-        className={`fixed z-50 right-4 left-4 top-20 rounded-3xl border border-[#e2d8cb] bg-white/90 p-5 shadow-[0_16px_40px_rgba(0,0,0,0.12)] transition-all duration-200 ${
+        className={`fixed z-50 right-4 left-4 top-24 rounded-3xl border border-[#e2d8cb] bg-white/90 p-5 shadow-[0_16px_40px_rgba(0,0,0,0.12)] transition-all duration-200 ${
           open ? "opacity-100 translate-y-0" : "pointer-events-none opacity-0 -translate-y-2"
         } xl:hidden`}
       >

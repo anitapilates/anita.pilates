@@ -89,7 +89,7 @@ export default function ServicioPage({
       <DatosEstructurados idioma={idioma} pagina={pagina} />
       <Cabecera idioma={idioma} pagina={pagina} />
 
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-10 pb-28 space-y-20 sm:space-y-24">
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-10 pt-6 sm:pt-8 pb-28 space-y-20 sm:space-y-24">
         {/* ── CABECERA DE LA PÁGINA ── */}
         <section className="grid lg:grid-cols-2 gap-10 lg:gap-12 items-center">
           <div className="space-y-6">

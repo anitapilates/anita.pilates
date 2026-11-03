@@ -160,40 +160,43 @@ export function Cabecera({ idioma, pagina }: { idioma: Idioma; pagina: Pagina })
   const t = textos[idioma];
   const navLinks = enlacesMenu(idioma);
   return (
-    <header className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-10 py-6 sm:py-8 flex items-center justify-between gap-3">
-      <a href={RUTAS.inicio[idioma]} className="flex items-center gap-3 min-w-0">
-        <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full border border-[#d8d0c6] shadow-sm bg-white">
-          <Image
-            src="/anita-pose.jpg"
-            alt="Anita Pilates"
-            fill
-            className="object-cover"
-            sizes="48px"
-            priority
-          />
+    // La cabecera se queda fija arriba al bajar por la página.
+    <div className="sticky top-0 z-40 border-b border-[#e2d8cb]/70 bg-[#f8f6f3]/90 backdrop-blur-md">
+      <header className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-10 py-3 sm:py-4 flex items-center justify-between gap-3">
+        <a href={RUTAS.inicio[idioma]} className="flex items-center gap-3 min-w-0">
+          <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full border border-[#d8d0c6] shadow-sm bg-white">
+            <Image
+              src="/anita-pose.jpg"
+              alt="Anita Pilates"
+              fill
+              className="object-cover"
+              sizes="48px"
+              priority
+            />
+          </div>
+          <div className="leading-tight min-w-0">
+            <p className="font-serif text-xl tracking-tight whitespace-nowrap">Anita Pilates</p>
+            <p className="text-sm text-neutral-600">{t.cabecera.subtitulo}</p>
+          </div>
+        </a>
+        <div className="flex items-center gap-3 xl:gap-6 shrink-0">
+          <nav className="hidden xl:flex items-center gap-4 text-sm uppercase tracking-[0.12em] text-neutral-700">
+            {navLinks.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                aria-current={link.href === RUTAS[pagina][idioma] ? "page" : undefined}
+                className="hover:text-[#1f1b18] transition-colors aria-[current=page]:text-[#1f1b18]"
+              >
+                {link.label}
+              </a>
+            ))}
+          </nav>
+          <SelectorIdioma idioma={idioma} pagina={pagina} />
+          <MobileNav links={navLinks} ariaLabel={t.nav.abrirMenu} />
         </div>
-        <div className="leading-tight min-w-0">
-          <p className="font-serif text-xl tracking-tight whitespace-nowrap">Anita Pilates</p>
-          <p className="text-sm text-neutral-600">{t.cabecera.subtitulo}</p>
-        </div>
-      </a>
-      <div className="flex items-center gap-3 xl:gap-6 shrink-0">
-        <nav className="hidden xl:flex items-center gap-4 text-sm uppercase tracking-[0.12em] text-neutral-700">
-          {navLinks.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              aria-current={link.href === RUTAS[pagina][idioma] ? "page" : undefined}
-              className="hover:text-[#1f1b18] transition-colors aria-[current=page]:text-[#1f1b18]"
-            >
-              {link.label}
-            </a>
-          ))}
-        </nav>
-        <SelectorIdioma idioma={idioma} pagina={pagina} />
-        <MobileNav links={navLinks} ariaLabel={t.nav.abrirMenu} />
-      </div>
-    </header>
+      </header>
+    </div>
   );
 }
 

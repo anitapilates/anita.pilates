@@ -21,6 +21,16 @@
   box-sizing: border-box;
 }
 
+/* Deja hueco para la cabecera fija al saltar a una sección (#centros, etc.) */
+html {
+  scroll-padding-top: 6rem;
+}
+@media (min-width: 640px) {
+  html {
+    scroll-padding-top: 6.5rem;
+  }
+}
+
 body {
   background: radial-gradient(circle at 20% 20%, #f2ece3 0, #f8f6f3 35%),
     radial-gradient(circle at 85% 10%, #f6f1e8 0, #f8f6f3 30%),
