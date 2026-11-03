@@ -66,7 +66,7 @@ export default function HomePage({ idioma }: { idioma: Idioma }) {
       <DatosEstructurados idioma={idioma} pagina="inicio" />
       <Cabecera idioma={idioma} pagina="inicio" />
 
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-10 pb-28 space-y-20 sm:space-y-24">
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-10 pt-6 sm:pt-8 pb-28 space-y-20 sm:space-y-24">
         {/* ── PORTADA ── */}
         <section className="grid lg:grid-cols-2 gap-10 lg:gap-12 items-center lg:min-h-[70vh]">
           <div className="space-y-6">
