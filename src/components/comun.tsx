@@ -160,8 +160,9 @@ export function Cabecera({ idioma, pagina }: { idioma: Idioma; pagina: Pagina })
   const t = textos[idioma];
   const navLinks = enlacesMenu(idioma);
   return (
-    // La cabecera se queda fija arriba al bajar por la página.
-    <div className="sticky top-0 z-40 border-b border-[#e2d8cb]/70 bg-[#f8f6f3]/90 backdrop-blur-md">
+    // En ordenador, la cabecera se queda fija arriba al bajar por la página.
+    // En móvil y tablet se va con el contenido y aparece la bolita del menú.
+    <div className="xl:sticky xl:top-0 xl:z-40 xl:border-b xl:border-[#e2d8cb]/70 xl:bg-[#f8f6f3]/90 xl:backdrop-blur-md">
       <header className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-10 py-3 sm:py-4 flex items-center justify-between gap-3">
         <a href={RUTAS.inicio[idioma]} className="flex items-center gap-3 min-w-0">
           <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full border border-[#d8d0c6] shadow-sm bg-white">
