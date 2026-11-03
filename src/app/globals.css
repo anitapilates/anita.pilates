@@ -21,11 +21,12 @@
   box-sizing: border-box;
 }
 
-/* Deja hueco para la cabecera fija al saltar a una sección (#centros, etc.) */
+/* Hueco al saltar a una sección (#centros, etc.): en ordenador,
+   para la cabecera fija; en móvil, para la bolita del menú. */
 html {
-  scroll-padding-top: 6rem;
+  scroll-padding-top: 1.5rem;
 }
-@media (min-width: 640px) {
+@media (min-width: 1280px) {
   html {
     scroll-padding-top: 6.5rem;
   }
