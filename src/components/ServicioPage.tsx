@@ -25,7 +25,7 @@ import { RUTAS } from "../content/seo";
 const EMAIL = "anita.pilatess@gmail.com";
 
 const panel =
-  "rounded-3xl border border-[#e2d8cb] bg-white/70 p-6 sm:p-8 lg:p-10 shadow-[0_12px_36px_rgba(0,0,0,0.05)]";
+  "sm:rounded-3xl sm:border sm:border-[#e2d8cb] sm:bg-white/70 sm:p-8 lg:p-10 sm:shadow-[0_12px_36px_rgba(0,0,0,0.05)]";
 
 const ListaPuntos = ({ items }: { items: string[] }) => (
   <ul className="space-y-3 text-neutral-700 leading-relaxed">
@@ -89,7 +89,7 @@ export default function ServicioPage({
       <DatosEstructurados idioma={idioma} pagina={pagina} />
       <Cabecera idioma={idioma} pagina={pagina} />
 
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-10 pt-6 sm:pt-8 pb-28 space-y-20 sm:space-y-24">
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-10 pt-6 sm:pt-8 pb-28 space-y-16 sm:space-y-24">
         {/* ── CABECERA DE LA PÁGINA ── */}
         <section className="grid lg:grid-cols-2 gap-10 lg:gap-12 items-center">
           <div className="space-y-6">
@@ -109,11 +109,11 @@ export default function ServicioPage({
                 {p.botonSecundario}
               </a>
             </div>
-            <div className="flex flex-wrap gap-3 text-xs uppercase tracking-[0.2em] text-neutral-600">
+            <div className="flex flex-wrap gap-2 sm:gap-3 text-[11px] sm:text-xs uppercase tracking-[0.16em] sm:tracking-[0.2em] text-neutral-600">
               {p.datos.map((dato) => (
                 <span
                   key={dato}
-                  className="rounded-full border border-[#d8d0c6] bg-white/70 px-3 py-2"
+                  className="rounded-full border border-[#d8d0c6] bg-white/70 px-2.5 py-1.5 sm:px-3 sm:py-2"
                 >
                   {dato}
                 </span>
@@ -136,7 +136,7 @@ export default function ServicioPage({
         </section>
 
         {/* ── QUÉ INCLUYE · PARA QUIÉN ES ── */}
-        <section className="grid lg:grid-cols-2 gap-6">
+        <section className="grid lg:grid-cols-2 gap-12 sm:gap-6">
           <div className={`${panel} space-y-5`}>
             <h2 className="text-3xl font-serif tracking-tight text-[#1f1b18]">
               {p.incluyeTitulo}
@@ -178,7 +178,7 @@ export default function ServicioPage({
         {/* ── TARIFAS / PRÓXIMO EVENTO / PROPUESTA ── */}
         <section
           id={idPrecio}
-          className="scroll-mt-6 rounded-3xl border border-[#e2d8cb] bg-white/70 p-6 sm:p-8 lg:p-12 shadow-[0_15px_45px_rgba(53,45,38,0.08)] space-y-6"
+          className="scroll-mt-6 sm:rounded-3xl sm:border sm:border-[#e2d8cb] sm:bg-white/70 sm:p-8 lg:p-12 sm:shadow-[0_15px_45px_rgba(53,45,38,0.08)] space-y-6"
         >
           <h2 className="text-3xl font-serif tracking-tight text-[#1f1b18]">
             {p.precioTitulo}
