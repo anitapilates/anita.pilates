@@ -70,18 +70,6 @@ export default function MobileNav({
 
   return (
     <>
-      {/* Botón del menú dentro de la cabecera */}
-      <button
-        type="button"
-        aria-label={ariaLabel}
-        aria-expanded={open}
-        aria-controls="mobile-nav-panel"
-        onClick={() => setOpen((v) => !v)}
-        className={`xl:hidden ${estiloBolita}`}
-      >
-        <IconoMenu />
-      </button>
-
       {/* Bolita flotante: aparece al bajar, cuando la cabecera ya no se ve */}
       <button
         type="button"
