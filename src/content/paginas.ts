@@ -74,7 +74,8 @@ export const paginas: Record<PaginaServicio, Config> = {
       "matReformer",
       "acompanante",
     ],
-    testimonios: "todos",
+    // Todos menos Chiara, que habla de clases de grupo
+    testimonios: ["Celia", "María", "Adriana", "Marta", "Marisol", "Laura", "Carolina", "Fer", "Angela"],
     es: {
       seo: {
         titulo:
@@ -135,7 +136,7 @@ export const paginas: Record<PaginaServicio, Config> = {
       precioNotas: [
         "Sesiones de 50 minutos · presenciales en Barcelona (también online si lo necesitas).",
         "El bono de 5 sesiones tiene una validez de 3 meses.",
-        "¿Necesitas cancelar o cambiar una sesión? Avísame con al menos una semana de antelación.",
+        "¿Necesitas cancelar o cambiar una sesión? Avísame con al menos 48 horas de antelación.",
       ],
       faqExtra: [
         {
@@ -149,7 +150,7 @@ export const paginas: Record<PaginaServicio, Config> = {
         },
         {
           pregunta: "¿Y si tengo que cancelar una sesión?",
-          respuesta: "Avísame con al menos una semana de antelación.",
+          respuesta: "Avísame con al menos 48 horas de antelación.",
         },
         {
           pregunta: "¿Puedo hacer la sesión en inglés?",
@@ -217,7 +218,7 @@ export const paginas: Record<PaginaServicio, Config> = {
       precioNotas: [
         "50-minute sessions · in person in Barcelona (online too, if that works better for you).",
         "The 5-session pack is valid for 3 months.",
-        "Need to cancel or move a session? Just let me know at least one week in advance.",
+        "Need to cancel or move a session? Just let me know at least 48 hours in advance.",
       ],
       faqExtra: [
         {
@@ -231,7 +232,7 @@ export const paginas: Record<PaginaServicio, Config> = {
         },
         {
           pregunta: "What if I need to cancel a session?",
-          respuesta: "Just let me know at least one week in advance.",
+          respuesta: "Just let me know at least 48 hours in advance.",
         },
         {
           pregunta: "Do you teach in English?",
