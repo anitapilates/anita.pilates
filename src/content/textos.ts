@@ -27,6 +27,7 @@ const es = {
     idioma: "Idioma",
     verMas: "Ver más",
     relacionadas: "También te puede interesar",
+    secciones: "Apartados de la web",
   },
 
   cabecera: {
@@ -300,6 +301,7 @@ const en: Textos = {
     idioma: "Language",
     verMas: "See more",
     relacionadas: "You might also like",
+    secciones: "Website sections",
   },
 
   cabecera: {

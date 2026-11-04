@@ -160,8 +160,9 @@ export function Cabecera({ idioma, pagina }: { idioma: Idioma; pagina: Pagina })
   const t = textos[idioma];
   const navLinks = enlacesMenu(idioma);
   return (
-    // En ordenador, la cabecera se queda fija arriba al bajar por la página.
-    // En móvil y tablet se va con el contenido y aparece la bolita del menú.
+    // En ordenador grande, la cabecera (con el menú en una línea) se queda fija
+    // arriba al bajar. En portátil, tablet y móvil, los apartados se ven en una
+    // fila de pastillas bajo el logo; al bajar aparece la bolita del menú.
     <div className="xl:sticky xl:top-0 xl:z-40 xl:border-b xl:border-[#e2d8cb]/70 xl:bg-[#f8f6f3]/90 xl:backdrop-blur-md">
       <header className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-10 py-3 sm:py-4 flex items-center justify-between gap-3">
         <a href={RUTAS.inicio[idioma]} className="flex items-center gap-3 min-w-0">
@@ -197,6 +198,30 @@ export function Cabecera({ idioma, pagina }: { idioma: Idioma; pagina: Pagina })
           <MobileNav links={navLinks} ariaLabel={t.nav.abrirMenu} />
         </div>
       </header>
+
+      {/* Apartados en una fila bajo el logo (portátil, tablet y móvil) */}
+      <nav
+        aria-label={t.nav.secciones}
+        className="xl:hidden relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-10 pb-2"
+      >
+        <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:px-0 lg:flex-wrap [&::-webkit-scrollbar]:hidden">
+          {navLinks.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              aria-current={link.href === RUTAS[pagina][idioma] ? "page" : undefined}
+              className="shrink-0 whitespace-nowrap rounded-full border border-[#d8d0c6] bg-white/70 px-3.5 py-2 text-xs uppercase tracking-[0.16em] text-neutral-700 transition-colors hover:bg-white aria-[current=page]:border-[#1f1b18] aria-[current=page]:bg-[#1f1b18] aria-[current=page]:text-white"
+            >
+              {link.label}
+            </a>
+          ))}
+        </div>
+        {/* Degradado a la derecha: indica que la fila se puede deslizar */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute right-0 top-0 h-full w-10 bg-gradient-to-l from-[#f8f6f3] to-transparent lg:hidden"
+        />
+      </nav>
     </div>
   );
 }
