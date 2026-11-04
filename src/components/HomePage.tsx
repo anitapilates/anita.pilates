@@ -57,6 +57,10 @@ const centros = [
 ];
 
 
+// Botón claro que en móvil va a medio ancho (dos por fila)
+const btnClaroCompacto =
+  "inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-full border border-[#c9c0b5] bg-white px-3 sm:px-6 py-3 text-[13px] sm:text-sm font-semibold text-[#1f1b18] hover:bg-[#e6dfd4] transition-colors";
+
 export default function HomePage({ idioma }: { idioma: Idioma }) {
   const t = textos[idioma];
   const evento = botonEvento(idioma);
@@ -66,11 +70,14 @@ export default function HomePage({ idioma }: { idioma: Idioma }) {
       <DatosEstructurados idioma={idioma} pagina="inicio" />
       <Cabecera idioma={idioma} pagina="inicio" />
 
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-10 pt-6 sm:pt-8 pb-28 space-y-20 sm:space-y-24">
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-10 pt-6 sm:pt-8 pb-28 space-y-16 sm:space-y-24">
         {/* ── PORTADA ── */}
-        <section className="grid lg:grid-cols-2 gap-10 lg:gap-12 items-center lg:min-h-[70vh]">
-          <div className="space-y-6">
-            <p className="text-sm uppercase tracking-[0.28em] text-neutral-600">
+        {/* En móvil, el orden es: titular y texto → botones → foto → resto.
+            En ordenador, texto a la izquierda y foto a la derecha. */}
+        <section className="grid lg:grid-cols-2 gap-6 sm:gap-10 lg:gap-12 items-center lg:min-h-[70vh]">
+          <div className="contents lg:block lg:space-y-6">
+           <div className="order-1 space-y-5 lg:order-none lg:space-y-6">
+            <p className="text-xs sm:text-sm uppercase tracking-[0.22em] sm:tracking-[0.28em] text-neutral-600">
               {t.portada.antetitulo}
             </p>
             <h1 className="text-4xl lg:text-5xl font-serif leading-tight tracking-tight text-[#1f1b18]">
@@ -79,29 +86,33 @@ export default function HomePage({ idioma }: { idioma: Idioma }) {
             <p className="text-lg text-neutral-700 leading-relaxed">
               {t.portada.intro}
             </p>
-            <div className="flex flex-wrap gap-3 pt-1">
+           </div>
+           <div className="order-2 space-y-4 lg:order-none lg:space-y-6">
+            <div className="grid grid-cols-2 gap-3 pt-1 sm:flex sm:flex-wrap">
               <a
                 href={enlaceWhatsapp(t.portada.mensajePrincipal)}
                 target="_blank"
                 rel="noreferrer"
-                className={btnOscuro}
+                className={`col-span-2 ${btnOscuro}`}
               >
                 <IconoWhatsapp className="h-4 w-4" />
                 {t.portada.botonPrincipal}
               </a>
-              <a href="#sesiones" className={btnClaro}>
+              <a href="#sesiones" className={btnClaroCompacto}>
                 {t.portada.botonTarifas}
               </a>
-              <a href="#eventos" className={btnClaro}>
+              <a href="#eventos" className={btnClaroCompacto}>
                 {t.portada.botonEvento}
               </a>
             </div>
             <p className="text-sm text-neutral-600">{t.portada.nota}</p>
-            <div className="grid sm:grid-cols-2 gap-3 text-sm text-neutral-700">
+           </div>
+           <div className="order-4 space-y-6 lg:order-none">
+            <div className="grid divide-y divide-[#e2d8cb] border-y border-[#e2d8cb] text-sm text-neutral-700 sm:grid-cols-2 sm:gap-3 sm:divide-y-0 sm:border-y-0">
               {t.portada.diferenciales.map((item) => (
                 <span
                   key={item.titulo}
-                  className="rounded-2xl border border-[#d8d0c6] bg-white/80 px-4 py-3 flex flex-col gap-1"
+                  className="py-3 flex flex-col gap-1 sm:rounded-2xl sm:border sm:border-[#d8d0c6] sm:bg-white/80 sm:px-4"
                 >
                   <span className="font-semibold">{item.titulo}</span>
                   <span className="leading-relaxed text-neutral-700">
@@ -110,21 +121,22 @@ export default function HomePage({ idioma }: { idioma: Idioma }) {
                 </span>
               ))}
             </div>
-            <div className="flex flex-wrap gap-3 text-xs uppercase tracking-[0.2em] text-neutral-600">
+            <div className="flex flex-wrap gap-2 sm:gap-3 text-[11px] sm:text-xs uppercase tracking-[0.16em] sm:tracking-[0.2em] text-neutral-600">
               {t.portada.etiquetas.map((etiqueta) => (
                 <span
                   key={etiqueta}
-                  className="rounded-full border border-[#d8d0c6] bg-white/70 px-3 py-2"
+                  className="rounded-full border border-[#d8d0c6] bg-white/70 px-2.5 py-1.5 sm:px-3 sm:py-2"
                 >
                   {etiqueta}
                 </span>
               ))}
             </div>
+           </div>
           </div>
 
-          <div className="relative">
+          <div className="relative order-3 lg:order-none">
             <div className="absolute inset-0 blur-3xl bg-[radial-gradient(circle_at_30%_20%,#e6dfd4,transparent_55%)]" />
-            <div className="relative rounded-3xl overflow-hidden border border-[#e2d8cb] shadow-[0_15px_40px_rgba(53,45,38,0.08)] bg-white/70 backdrop-blur">
+            <div className="relative rounded-3xl overflow-hidden border border-[#e2d8cb] shadow-[0_15px_40px_rgba(53,45,38,0.08)] bg-white/70 backdrop-blur aspect-[4/5] sm:aspect-auto">
               <Image
                 src="/anita-profile.jpg"
                 alt={t.portada.fotoAlt}
@@ -151,7 +163,7 @@ export default function HomePage({ idioma }: { idioma: Idioma }) {
         {/* ── SESIONES PRIVADAS ── */}
         <section
           id="sesiones"
-          className="scroll-mt-6 rounded-3xl border border-[#e2d8cb] bg-white/70 p-6 sm:p-8 lg:p-12 shadow-[0_15px_45px_rgba(53,45,38,0.08)] space-y-8"
+          className="scroll-mt-6 sm:rounded-3xl sm:border sm:border-[#e2d8cb] sm:bg-white/70 sm:p-8 lg:p-12 sm:shadow-[0_15px_45px_rgba(53,45,38,0.08)] space-y-8"
         >
           <div className="grid lg:grid-cols-[1.4fr_1fr] gap-6 lg:gap-10 lg:items-end">
             <div className="space-y-4">
@@ -202,9 +214,9 @@ export default function HomePage({ idioma }: { idioma: Idioma }) {
             </h2>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-6 items-stretch">
+          <div className="grid lg:grid-cols-2 gap-14 sm:gap-6 items-stretch">
             {/* Tarjeta: eventos */}
-            <div className="rounded-3xl border border-[#e2d8cb] bg-white/70 p-6 sm:p-8 lg:p-10 shadow-[0_15px_45px_rgba(53,45,38,0.08)] flex flex-col gap-4">
+            <div className="sm:rounded-3xl sm:border sm:border-[#e2d8cb] sm:bg-white/70 sm:p-8 lg:p-10 sm:shadow-[0_15px_45px_rgba(53,45,38,0.08)] flex flex-col gap-4">
               <p className="text-xs uppercase tracking-[0.3em] text-neutral-600">
                 {t.eventos.antetitulo}
               </p>
@@ -229,7 +241,7 @@ export default function HomePage({ idioma }: { idioma: Idioma }) {
             </div>
 
             {/* Tarjeta: empresas, residencias y grupos */}
-            <div className="rounded-3xl border border-[#e2d8cb] bg-white/70 p-6 sm:p-8 lg:p-10 shadow-[0_15px_45px_rgba(53,45,38,0.08)] flex flex-col gap-4">
+            <div className="sm:rounded-3xl sm:border sm:border-[#e2d8cb] sm:bg-white/70 sm:p-8 lg:p-10 sm:shadow-[0_15px_45px_rgba(53,45,38,0.08)] flex flex-col gap-4">
               <div className="rounded-2xl overflow-hidden border border-[#e2d8cb] aspect-[16/9]">
                 <Image
                   src="/anita-session.jpg"
@@ -274,7 +286,7 @@ export default function HomePage({ idioma }: { idioma: Idioma }) {
         {/* ── SOBRE MÍ ── */}
         <section
           id="sobre-mi"
-          className="scroll-mt-6 space-y-4 rounded-3xl border border-[#e2d8cb] bg-white/70 p-6 sm:p-8 shadow-[0_12px_36px_rgba(0,0,0,0.05)]"
+          className="scroll-mt-6 space-y-4 sm:rounded-3xl sm:border sm:border-[#e2d8cb] sm:bg-white/70 sm:p-8 sm:shadow-[0_12px_36px_rgba(0,0,0,0.05)]"
         >
           <p className="text-xs uppercase tracking-[0.3em] text-neutral-600">
             {t.sobreMi.antetitulo}
@@ -343,7 +355,7 @@ export default function HomePage({ idioma }: { idioma: Idioma }) {
                       {centro.modalidad}
                     </p>
                   </div>
-                  <span className="text-xs uppercase tracking-[0.2em] text-neutral-600">
+                  <span className="hidden sm:inline text-xs uppercase tracking-[0.2em] text-neutral-600">
                     BCN
                   </span>
                 </div>
@@ -377,7 +389,7 @@ export default function HomePage({ idioma }: { idioma: Idioma }) {
         {/* ── HORARIO (se carga solo desde la hoja de Google) ── */}
         <section
           id="horario"
-          className="scroll-mt-6 space-y-4 rounded-3xl border border-[#e2d8cb] bg-white/70 p-6 sm:p-8 shadow-[0_12px_36px_rgba(0,0,0,0.05)]"
+          className="scroll-mt-6 space-y-4 sm:rounded-3xl sm:border sm:border-[#e2d8cb] sm:bg-white/70 sm:p-8 sm:shadow-[0_12px_36px_rgba(0,0,0,0.05)]"
         >
           <p className="text-xs uppercase tracking-[0.3em] text-neutral-600">
             {t.horario.antetitulo}
@@ -390,7 +402,7 @@ export default function HomePage({ idioma }: { idioma: Idioma }) {
         </section>
 
         {/* ── VÍDEO DE YOUTUBE (se carga solo) ── */}
-        <section className="rounded-3xl border border-[#e2d8cb] bg-white/70 p-6 sm:p-8 lg:p-12 shadow-[0_12px_36px_rgba(0,0,0,0.06)]">
+        <section className="sm:rounded-3xl sm:border sm:border-[#e2d8cb] sm:bg-white/70 sm:p-8 lg:p-12 sm:shadow-[0_12px_36px_rgba(0,0,0,0.06)]">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:gap-10">
             <div className="space-y-3 lg:w-1/3">
               <p className="text-xs uppercase tracking-[0.3em] text-neutral-600">

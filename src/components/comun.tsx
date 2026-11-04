@@ -2,6 +2,7 @@
 // para que todas se vean igual y se editen en un solo sitio.
 import Image from "next/image";
 import MobileNav from "./MobileNav";
+import AparecerAlBajar from "./AparecerAlBajar";
 import { textos, type Idioma } from "../content/textos";
 import { tarifas, DURACION_SESION_MINUTOS } from "../content/tarifas";
 import { proximoEvento } from "../content/evento";
@@ -56,16 +57,18 @@ export const IconoWhatsapp = ({ className = "h-6 w-6" }: { className?: string })
 export const WhatsappFlotante = ({ idioma }: { idioma: Idioma }) => {
   const t = textos[idioma].whatsappFlotante;
   return (
-    <a
-      href={enlaceWhatsapp(t.mensaje)}
-      target="_blank"
-      rel="noreferrer"
-      className="fixed bottom-5 right-5 z-30 inline-flex h-14 w-14 items-center justify-center rounded-full bg-[#25d366] text-white shadow-[0_12px_30px_rgba(0,0,0,0.18)] transition-transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-[#25d366]/40 sm:bottom-6 sm:right-6"
-      aria-label={t.etiqueta}
-      title={t.etiqueta}
-    >
-      <IconoWhatsapp />
-    </a>
+    <AparecerAlBajar>
+      <a
+        href={enlaceWhatsapp(t.mensaje)}
+        target="_blank"
+        rel="noreferrer"
+        className="fixed bottom-4 right-4 z-30 inline-flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-[#25d366] text-white shadow-[0_12px_30px_rgba(0,0,0,0.18)] transition-transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-[#25d366]/40 sm:bottom-6 sm:right-6"
+        aria-label={t.etiqueta}
+        title={t.etiqueta}
+      >
+        <IconoWhatsapp />
+      </a>
+    </AparecerAlBajar>
   );
 };
 
@@ -204,13 +207,13 @@ export function Cabecera({ idioma, pagina }: { idioma: Idioma; pagina: Pagina })
         aria-label={t.nav.secciones}
         className="xl:hidden relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-10"
       >
-        <div className="-mx-4 flex gap-6 overflow-x-auto border-y border-[#e2d8cb] px-4 [scrollbar-width:none] sm:mx-0 sm:gap-7 sm:px-0 [&::-webkit-scrollbar]:hidden">
+        <div className="-mx-4 flex gap-5 overflow-x-auto border-y border-[#e2d8cb] px-4 [scrollbar-width:none] sm:mx-0 sm:gap-7 sm:px-0 [&::-webkit-scrollbar]:hidden">
           {navLinks.map((link) => (
             <a
               key={link.href}
               href={link.href}
               aria-current={link.href === RUTAS[pagina][idioma] ? "page" : undefined}
-              className="shrink-0 whitespace-nowrap py-3 text-xs font-medium uppercase tracking-[0.16em] text-neutral-700 underline-offset-[6px] transition-colors hover:text-[#1f1b18] aria-[current=page]:text-[#1f1b18] aria-[current=page]:underline"
+              className="shrink-0 whitespace-nowrap py-3 text-[11px] sm:text-xs font-medium uppercase tracking-[0.12em] sm:tracking-[0.16em] text-neutral-700 underline-offset-[6px] transition-colors hover:text-[#1f1b18] aria-[current=page]:text-[#1f1b18] aria-[current=page]:underline"
             >
               {link.label}
             </a>
@@ -301,7 +304,7 @@ export function TarjetasPrecio({ idioma }: { idioma: Idioma }) {
       {tarjetas.map((tarjeta) => (
         <div
           key={tarjeta.titulo}
-          className="rounded-2xl border border-[#e2d8cb] bg-white/90 p-6 shadow-[0_10px_30px_rgba(0,0,0,0.04)] flex flex-col gap-4"
+          className="rounded-2xl border border-[#e2d8cb] bg-white/90 p-5 sm:p-6 shadow-[0_10px_30px_rgba(0,0,0,0.04)] flex flex-col gap-4"
         >
           <div className="space-y-2">
             <h3 className="text-2xl font-serif tracking-tight text-[#1f1b18]">
@@ -456,13 +459,13 @@ export function Contacto({ idioma }: { idioma: Idioma }) {
           <span aria-hidden>→</span>
         </a>
       </div>
-      <div className="grid sm:grid-cols-3 gap-4 pt-2">
+      <div className="grid grid-cols-3 gap-2 sm:gap-4 pt-2">
         {[
           { src: "/anita-pose.jpg", alt: t.contacto.fotos[0] },
           { src: "/anita-detail.jpg", alt: t.contacto.fotos[1] },
           { src: "/anita-hero.jpg", alt: t.contacto.fotos[2] },
         ].map((item) => (
-          <div key={item.src} className="overflow-hidden rounded-2xl border border-white/20">
+          <div key={item.src} className="aspect-square sm:aspect-auto overflow-hidden rounded-xl sm:rounded-2xl border border-white/20">
             <Image
               src={item.src}
               alt={item.alt}
