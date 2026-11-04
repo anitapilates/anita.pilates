@@ -162,7 +162,7 @@ export function Cabecera({ idioma, pagina }: { idioma: Idioma; pagina: Pagina })
   return (
     // En ordenador grande, la cabecera (con el menú en una línea) se queda fija
     // arriba al bajar. En portátil, tablet y móvil, los apartados se ven en una
-    // fila de pastillas bajo el logo; al bajar aparece la bolita del menú.
+    // fila de texto bajo el logo; al bajar aparece la bolita del menú.
     <div className="xl:sticky xl:top-0 xl:z-40 xl:border-b xl:border-[#e2d8cb]/70 xl:bg-[#f8f6f3]/90 xl:backdrop-blur-md">
       <header className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-10 py-3 sm:py-4 flex items-center justify-between gap-3">
         <a href={RUTAS.inicio[idioma]} className="flex items-center gap-3 min-w-0">
@@ -202,15 +202,15 @@ export function Cabecera({ idioma, pagina }: { idioma: Idioma; pagina: Pagina })
       {/* Apartados en una fila bajo el logo (portátil, tablet y móvil) */}
       <nav
         aria-label={t.nav.secciones}
-        className="xl:hidden relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-10 pb-2"
+        className="xl:hidden relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-10"
       >
-        <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:px-0 lg:flex-wrap [&::-webkit-scrollbar]:hidden">
+        <div className="-mx-4 flex gap-6 overflow-x-auto border-y border-[#e2d8cb] px-4 [scrollbar-width:none] sm:mx-0 sm:gap-7 sm:px-0 [&::-webkit-scrollbar]:hidden">
           {navLinks.map((link) => (
             <a
               key={link.href}
               href={link.href}
               aria-current={link.href === RUTAS[pagina][idioma] ? "page" : undefined}
-              className="shrink-0 whitespace-nowrap rounded-full border border-[#d8d0c6] bg-white/70 px-3.5 py-2 text-xs uppercase tracking-[0.16em] text-neutral-700 transition-colors hover:bg-white aria-[current=page]:border-[#1f1b18] aria-[current=page]:bg-[#1f1b18] aria-[current=page]:text-white"
+              className="shrink-0 whitespace-nowrap py-3 text-xs font-medium uppercase tracking-[0.16em] text-neutral-700 underline-offset-[6px] transition-colors hover:text-[#1f1b18] aria-[current=page]:text-[#1f1b18] aria-[current=page]:underline"
             >
               {link.label}
             </a>
