@@ -78,7 +78,7 @@ const es = {
     intro:
       "Trabajamos a tu ritmo y según tus objetivos: ganar fuerza, mejorar la postura, coger constancia o simplemente sentirte mejor en tu cuerpo. Tú eliges Mat o Reformer, y yo adapto cada ejercicio a tu nivel, con corrección y seguimiento directo.",
     detalle:
-      "Sesiones de {minutos} minutos · presenciales en Barcelona (también online si lo necesitas).",
+      "Sesiones de {minutos} minutos · presenciales en Barcelona (Les Corts, Sant Gervasi y Sarrià) (también online si lo necesitas).",
     porSesion: "por sesión",
     bono5: "Bono de 5 sesiones",
     porPersona: "/persona",
@@ -351,7 +351,7 @@ const en: Textos = {
     intro:
       "We work at your pace and around your goals: getting stronger, improving your posture, staying consistent or simply feeling better in your body. You choose Mat or Reformer, and I adapt every exercise to your level, with close guidance and personal follow-up.",
     detalle:
-      "{minutos}-minute sessions in English or Spanish · in person in Barcelona (online too, if that works better for you).",
+      "{minutos}-minute sessions in English or Spanish · in person in Barcelona (Les Corts, Sant Gervasi and Sarrià) (online too, if that works better for you).",
     porSesion: "per session",
     bono5: "5-session pack",
     porPersona: "/person",
